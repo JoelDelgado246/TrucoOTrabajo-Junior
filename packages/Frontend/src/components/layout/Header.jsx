@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function Header() {
   return (
-    <header className="bg-[#FF9838] py-4">
+    <header className="bg-customOrange">
       <div className="container mx-auto flex justify-between items-center px-6">
         {/* Logo */}
         <div className="flex items-center gap-20">
@@ -13,7 +13,6 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Navegación */}
           <nav className="flex gap-16">
             <Link
               to="/comunidad"
@@ -36,17 +35,16 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Botones de autenticación */}
         <div className="flex items-center gap-4">
           <Link
             to="/registro"
-            className="font-creepster text-[21px] text-black rounded-full px-6 py-1 border-2 border-lime-400 hover:bg-lime-400/10"
+            className="font-creepster text-[21px] text-black rounded-full px-6 py-1 border-2 border-customGreen hover:bg-customGreen"
           >
             REGISTRARSE
           </Link>
           <Link
             to="/login"
-            className="font-creepster text-[21px] text-white bg-purple-800 rounded-full px-6 py-1 hover:bg-purple-900"
+            className="font-creepster text-[21px] text-white bg-customPurple rounded-full px-6 py-1 hover:bg-purple-950"
           >
             INICIAR SESIÓN
           </Link>
