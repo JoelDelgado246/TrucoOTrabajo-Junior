@@ -23,7 +23,11 @@ export default function Header() {
             </Link>
             <Link
               to="/trucos"
-              className="font-creepster text-[21px] text-black hover:text-purple-800"
+              className={`font-creepster text-[21px] ${
+                location.pathname === "/trucos"
+                  ? "text-purple-800"
+                  : "text-black"
+              } hover:text-purple-800`}
             >
               TRUCOS
             </Link>
