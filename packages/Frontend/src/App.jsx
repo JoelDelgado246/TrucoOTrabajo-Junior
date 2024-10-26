@@ -6,6 +6,7 @@ import Trucos from "./pages/Trucos";
 import Tratos from "./pages/Tratos";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
+import SolveTrick from "./pages/SolveTrick";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/comunidad" element={<Comunidad />} />
         <Route path="/trucos" element={<Trucos />} />
         <Route path="/tratos" element={<Tratos />} />
+        <Route path="/solve-trick" element={<SolveTrick />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
       </Routes>
