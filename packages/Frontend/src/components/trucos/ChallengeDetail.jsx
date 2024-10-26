@@ -1,60 +1,82 @@
 // src/pages/challenges/ChallengeDetail.jsx
-import { useParams } from "react-router-dom";
-import Header from "../../components/layout/Header";
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import CodeEditor from '../../components/trucos/CodeEditor';
+import TestResults from '../../components/trucos/TestResults';
 
 export default function ChallengeDetail() {
   const { id } = useParams();
+  const [code, setCode] = useState('// Tu código aquí\n');
+  const [testResults, setTestResults] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleRunTests = async () => {
+    setIsLoading(true);
+    try {
+      // Aquí irá la llamada al backend
+      // Por ahora simulamos
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setTestResults({
+        passed: true,
+        result: "Test pasado"
+      });
+    } catch (error) {
+      setTestResults({
+        passed: false,
+        error: error.message
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen">
-      <Header />
-
-      <main className="bg-purple-800 min-h-screen py-12 px-6">
-        <div className="container mx-auto">
-          {/* Encabezado del reto */}
-          <div className="bg-orange-500 rounded-lg p-8 mb-8">
-            <h1 className="font-creepster text-[45px] mb-4">TÍTULO DEL RETO</h1>
-            <div className="flex items-center gap-4 mb-4">
-              <span className="bg-orange-400 text-black px-4 py-1 rounded-lg">
-                JS
-              </span>
-              <span className="text-lime-400 font-creepster">FÁCIL</span>
-            </div>
-            <p className="text-black">Descripción detallada del reto...</p>
+    <div className="min-h-screen bg-purple-800">
+      <div className="container mx-auto py-8 px-4">
+        {/* Descripción del reto */}
+        <div className="bg-orange-500 rounded-lg p-8 mb-8">
+          <h1 className="font-creepster text-[45px] mb-4">
+            Reto Terrorífico: {id}
+          </h1>
+          <div className="mb-4">
+            <h2 className="font-bold mb-2">Descripción:</h2>
+            <p>Implementa una función que...</p>
           </div>
+          <div className="bg-orange-400 p-4 rounded-lg">
+            <h3 className="font-bold mb-2">Ejemplos:</h3>
+            <pre className="bg-gray-800 text-white p-2 rounded">
+              {`Input: [1, 2]\nExpected Output: 3`}
+            </pre>
+          </div>
+        </div>
 
-          {/* Contenido del reto */}
-          <div className="grid grid-cols-2 gap-8">
-            {/* Instrucciones */}
-            <div className="bg-orange-500 rounded-lg p-8">
-              <h2 className="font-creepster text-[34px] mb-4">INSTRUCCIONES</h2>
-              <ul className="list-disc list-inside space-y-2">
-                <li>Paso 1...</li>
-                <li>Paso 2...</li>
-                <li>Paso 3...</li>
-              </ul>
-            </div>
-
-            {/* Editor/Solución */}
-            <div className="bg-orange-500 rounded-lg p-8">
-              <h2 className="font-creepster text-[34px] mb-4">TU SOLUCIÓN</h2>
-              <div className="bg-gray-900 rounded-lg p-4">
-                <pre className="text-white">
-                  <code>
-                    function tuSolucion(){" "}
-                    {
-                      // Código aquí
-                    }
-                  </code>
-                </pre>
-              </div>
-              <button className="bg-purple-800 text-white font-creepster px-6 py-2 rounded-lg mt-4 hover:bg-purple-900">
-                PROBAR SOLUCIÓN
+        {/* Editor y Resultados */}
+        <div className="grid grid-cols-2 gap-8">
+          <CodeEditor 
+            language="javascript"
+            code={code}
+            onChange={setCode}
+          />
+          
+          <div className="bg-orange-500 rounded-lg p-4">
+            <h2 className="font-creepster text-[34px] mb-4">Resultados</h2>
+            <TestResults 
+              results={testResults}
+              isLoading={isLoading}
+            />
+            
+            <div className="flex gap-4 mt-4">
+              <button
+                onClick={handleRunTests}
+                disabled={isLoading}
+                className="bg-lime-400 px-6 py-2 rounded-lg hover:bg-lime-500 text-black font-bold disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Probando...' : 'Probar Código'}
               </button>
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
