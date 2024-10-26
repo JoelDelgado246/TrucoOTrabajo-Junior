@@ -14,6 +14,7 @@ export default {
         'super': '45px',
         'title1': '34px',
         'title2': '21px',
+        'title3': '18px',
         'normal': '13px',
         'mini': '8px',
       },
