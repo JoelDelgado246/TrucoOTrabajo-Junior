@@ -1,22 +1,135 @@
 // src/pages/Trucos.jsx
+import { Link } from "react-router-dom";
 import Header from "../components/layout/Header";
 import DifficultySection from "../components/trucos/DifficultySection";
 
 const challenges = {
   facil: [
     {
-      title: "TÍTULO",
+      id: "facil-1",
+      title: "SUMA SIMPLE",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       language: "JS",
     },
-    // ... más retos
+    {
+      id: "facil-2",
+      title: "CONTADOR",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    {
+      id: "facil-3",
+      title: "TODO LIST",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    {
+      id: "facil-4",
+      title: "CALCULADORA",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    {
+      id: "facil-5",
+      title: "VALIDADOR",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    {
+      id: "facil-6",
+      title: "CONVERSOR",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    {
+      id: "facil-7",
+      title: "CONVERSOR",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    {
+      id: "facil-8",
+      title: "CONVERSOR",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
   ],
   medio: [
-    // ... retos de dificultad media
+    {
+      id: "medio-1",
+      title: "API REST",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    {
+      id: "medio-1",
+      title: "API REST",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    {
+      id: "medio-1",
+      title: "API REST",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    // ... Copiar y pegar 5 veces más cambiando id y title
+    {
+      id: "medio-6",
+      title: "AUTH SYSTEM",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
   ],
   terrorifico: [
-    // ... retos terroríficos
+    {
+      id: "terror-1",
+      title: "BLOCKCHAIN",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    {
+      id: "terror-1",
+      title: "BLOCKCHAIN",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    {
+      id: "terror-1",
+      title: "BLOCKCHAIN",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    {
+      id: "terror-1",
+      title: "BLOCKCHAIN",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
+    // ... Copiar y pegar 5 veces más cambiando id y title
+    {
+      id: "terror-6",
+      title: "IA MODEL",
+      description:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      language: "JS",
+    },
   ],
 };
 
