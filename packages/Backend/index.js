@@ -1,10 +1,13 @@
-const express = require('express')
+import express from 'express';
+import trucosRoutes from './routes/trucosRoutes.js';
 
-const app = express()
+const app = express();
+app.use(express.json());
 
-app.get('/trucos', (req, res) => res.send("obteniendo trucos"))
-app.post('/trucos', (req, res) => res.send("creando trucos"))
-app.put('/trucos', (req, res) => res.send("actualizando trucos"))
-app.delete('/trucos', (req, res) => res.send("eliminando trucos"))
+// Usa las rutas de trucos
+app.use('/api/trucos', trucosRoutes);
 
-app.listen(3000)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
+});

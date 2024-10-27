@@ -1,19 +1,23 @@
-const express = require('express')
-const router = express.Router()
+import express from 'express';
+import { getAllTrucos, getTrucoById, submitSolution, getComments, postComment } from '../controllers/trucosController.js';
 
-const trucosController = require('../controllers/trucosController');
+const router = express.Router();
 
-//Otener lista de trucos
-router.get('/', trucosController.getAllTrucos);
+// Obtener lista de trucos
+router.get('/', getAllTrucos);
+
 // Obtener detalles de un truco específico
-  router.get('/:id', trucosController.getTrucoByid);   
-// Subir solución para un reto específico (requiere autenticación)
-router.post('/:id/solucion', trucosController.submitSolution);
-// Obtener comentarios de un reto específico
-router.get('/:id/comentarios', trucosController.getComments);
-// Publicar un comentario sobre un reto específico (requiere autenticación)
-router.post('/:id/comentarios', trucosController.postComment);
+router.get('/:id', getTrucoById);
 
-module.exports = router;
+// Subir solución para un reto específico (requiere autenticación)
+router.post('/:id/solucion', submitSolution);
+
+// Obtener comentarios de un reto específico
+router.get('/:id/comentarios', getComments);
+
+// Publicar un comentario sobre un reto específico (requiere autenticación)
+router.post('/:id/comentarios', postComment);
+
+export default router;
 
 //Toca revisar las rutas
