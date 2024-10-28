@@ -1,13 +1,20 @@
 import { Link } from "react-router-dom";
 import { useState, useRef } from "react";
+import Editor from "@monaco-editor/react";
 import Header from "../components/layout/Header";
+import TestResults from "../components/trucos/TestResults";
 import "../css/SolveTrick.css";
 
-export default function TrucoPage() {
+export default function SolveTrick() {
   const [rating, setRating] = useState(0);
   const [isAnimationPlaying, setIsAnimationPlaying] = useState(true);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const popupRef = useRef(null);
+
+  // Estados para el editor y ejecución de código
+  const [code, setCode] = useState("// Tu código aquí\n");
+  const [testResults, setTestResults] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRating = (rate) => {
     setRating(rate);
@@ -38,7 +45,6 @@ export default function TrucoPage() {
     };
 
     document.addEventListener("mousemove", onMouseMove);
-
     document.addEventListener(
       "mouseup",
       () => {
@@ -48,11 +54,29 @@ export default function TrucoPage() {
     );
   };
 
+  const handleRunTests = async () => {
+    setIsLoading(true);
+    try {
+      // Aquí irá la llamada al backend cuando esté listo
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setTestResults({
+        passed: true,
+        result: "Test pasado",
+      });
+    } catch (error) {
+      setTestResults({
+        passed: false,
+        error: error.message,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="bg-customDarkPurple text-white min-h-screen">
       <Header />
-      {/* Main Content */}
-      <main className="container mx-auto ">
+      <main className="container mx-auto">
         <div className="flex justify-around w-full bg-customePurple p-4">
           <div className="w-1/2">
             <h1 className="text-super font-creepster mb-6">
@@ -60,9 +84,7 @@ export default function TrucoPage() {
             </h1>
             <p className="text-title3 mb-8">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
           </div>
           <div
@@ -90,14 +112,24 @@ export default function TrucoPage() {
             </div>
           </div>
         </div>
+
         <div className="flex gap-6 mt-8">
           {/* Challenge Area */}
           <div className="flex-1 bg-white text-black p-6 rounded flex flex-col justify-between">
             <div>
               <h2 className="text-title2 font-michroma mb-4">
-                Depende la pregunta se adapta esta pantalla
+                Descripción del Reto
               </h2>
-              <div className="w-full h-72 border-2 border-gray-300 rounded mb-4 overflow-y-auto"></div>
+              <div className="w-full h-72 border-2 border-gray-300 rounded mb-4 overflow-y-auto p-4">
+                {/* Aquí va la descripción del reto y ejemplos */}
+                <p className="mb-4">Implementa una función que...</p>
+                <div className="bg-gray-100 p-4 rounded">
+                  <h3 className="font-bold mb-2">Ejemplo:</h3>
+                  <pre className="bg-gray-800 text-white p-2 rounded">
+                    {`Input: [1, 2]\nExpected Output: 3`}
+                  </pre>
+                </div>
+              </div>
             </div>
             <div>
               <div className="text-normal">Puntúa el ejercicio:</div>
@@ -116,16 +148,48 @@ export default function TrucoPage() {
               </div>
             </div>
           </div>
+
           {/* Response Area */}
           <div className="flex-1 bg-white text-black p-6 rounded">
             <h2 className="text-title2 font-michroma mb-4">Tu respuesta</h2>
-            <div className="w-full h-72 border-2 border-gray-300 p-2 rounded"></div>
-            <button className="bg-customGreen px-6 py-2 mt-4 rounded font-michroma text-title2">
-              ¿Trato?
-            </button>
+            <Editor
+              height="300px"
+              defaultLanguage="javascript"
+              defaultValue={code}
+              theme="vs-dark"
+              onChange={setCode}
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+                lineNumbers: "on",
+                scrollBeyondLastLine: false,
+                automaticLayout: true,
+              }}
+            />
+            {testResults && (
+              <div className="mt-4">
+                <TestResults results={testResults} isLoading={isLoading} />
+              </div>
+            )}
+            <div className="flex gap-4 mt-4">
+              <button
+                onClick={handleRunTests}
+                disabled={isLoading}
+                className="bg-customGreen px-6 py-2 rounded font-michroma text-title2 text-black hover:bg-green-700 hover:text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "Probando..." : "Probar Código"}
+              </button>
+              <button
+                onClick={showPopup}
+                className="bg-customPurple text-white px-6 py-2 rounded font-michroma text-title2 hover:bg-purple-700"
+              >
+                ¿Trato?
+              </button>
+            </div>
           </div>
         </div>
       </main>
+
       {isPopupVisible && (
         <div
           ref={popupRef}
@@ -136,7 +200,7 @@ export default function TrucoPage() {
             <p>Este es un trato especial...</p>
             <button
               onClick={closePopup}
-              className="text-xl top-2 right-2 absolute "
+              className="text-xl top-2 right-2 absolute"
             >
               ×
             </button>
