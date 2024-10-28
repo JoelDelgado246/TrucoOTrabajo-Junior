@@ -138,7 +138,7 @@ export default function Trucos() {
     <div className="min-h-screen">
       <Header />
 
-      <main className="bg-purple-800 py-12 px-6">
+      <main className="bg-customPurple py-12 px-6">
         <div className="container mx-auto">
           <DifficultySection
             title="FÁCIL"

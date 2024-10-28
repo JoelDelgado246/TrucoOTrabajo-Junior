@@ -12,7 +12,7 @@ export default function ChallengeCard({ id, title, description, language }) {
         </span>
         <Link 
           to={`/trucos/${id}`} 
-          className="bg-purple-800 text-white font-creepster px-3 py-1 rounded-lg hover:bg-purple-900 text-sm"
+          className="bg-customPurple text-white font-creepster px-3 py-1 rounded-lg hover:bg-purple-900 text-sm"
         >
           ¿TE ATREVES?
         </Link>
