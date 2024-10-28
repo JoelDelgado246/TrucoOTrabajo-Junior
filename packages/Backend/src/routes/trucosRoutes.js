@@ -1,21 +1,30 @@
+// src/routes/trucosRoutes.js
 import express from 'express';
-import { getAllTrucos, getTrucoById, submitSolution, getComments, postComment } from '../controllers/trucosController.js';
+import {
+    getAllTrucos,
+    getTrucoById,
+    submitSolution,
+    getComments,
+    postComment,
+    getOpcionesRespuesta, // Añadida
+    getTestCases          // Añadida
+} from '../controllers/trucosController.js';
 
 const router = express.Router();
 
-// Obtener lista de trucos
+// Rutas básicas de trucos
 router.get('/trucos', getAllTrucos);
-
-// Obtener detalles de un truco específico
 router.get('/trucos/:id', getTrucoById);
 
-// Subir solución para un reto específico (requiere autenticación)
+// Rutas para soluciones
 router.post('/trucos/:id/solucion', submitSolution);
 
-// Obtener comentarios de un reto específico
+// Rutas para comentarios
 router.get('/trucos/:id/comentarios', getComments);
-
-// Publicar un comentario sobre un reto específico (requiere autenticación)
 router.post('/trucos/:id/comentarios', postComment);
+
+// Rutas para opciones y test cases
+router.get('/trucos/:id/opciones', getOpcionesRespuesta);
+router.get('/trucos/:id/test', getTestCases);
 
 export default router;

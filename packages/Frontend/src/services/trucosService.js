@@ -22,20 +22,17 @@ export const trucosService = {
         }
     },
 
-    // Enviar solución
-    submitSolution: async (id, solution, userId) => {
+    // Obtener test cases para trucos terroríficos
+    getTestCases: async (trucoId) => {
         try {
-            const response = await api.post(`/trucos/${id}/solucion`, {
-                solution,
-                userId
-            });
+            const response = await api.get(`/trucos/${trucoId}/test`);
             return response.data;
         } catch (error) {
             throw error;
         }
     },
 
-    // Obtener las opciones de respuesta
+    // Obtener opciones de respuesta para trucos fáciles
     getOpcionesRespuesta: async (trucoId) => {
         try {
             const response = await api.get(`/trucos/${trucoId}/opciones`);
@@ -45,16 +42,35 @@ export const trucosService = {
         }
     },
 
-    // Verificar respuesta
-    verificarRespuesta: async (trucoId, opcionId, userId) => {
+    // Enviar solución
+    submitSolution: async (id, solution) => {
         try {
-            const response = await api.post(`/trucos/${trucoId}/verificar`, {
-                opcionId,
-                userId
-            });
+            const response = await api.post(`/trucos/${id}/solucion`, { solution });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    // Obtener comentarios
+    getComments: async (id) => {
+        try {
+            const response = await api.get(`/trucos/${id}/comentarios`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    // Publicar comentario
+    postComment: async (id, comment) => {
+        try {
+            const response = await api.post(`/trucos/${id}/comentarios`, { comment });
             return response.data;
         } catch (error) {
             throw error;
         }
     }
 };
+
+export default trucosService;

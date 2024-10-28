@@ -1,20 +1,44 @@
-import { Link } from "react-router-dom";
-import { useState, useRef } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import Header from "../components/layout/Header";
 import TestResults from "../components/trucos/TestResults";
+import { trucosService } from "../services/trucosService";
 import "../css/SolveTrick.css";
 
 export default function SolveTrick() {
+  const { id } = useParams(); // Para obtener el ID del truco de la URL
+  const [truco, setTruco] = useState(null);
   const [rating, setRating] = useState(0);
   const [isAnimationPlaying, setIsAnimationPlaying] = useState(true);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const popupRef = useRef(null);
-
-  // Estados para el editor y ejecución de código
   const [code, setCode] = useState("// Tu código aquí\n");
   const [testResults, setTestResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const popupRef = useRef(null);
+
+  // Cargar datos del truco
+  useEffect(() => {
+    const cargarTruco = async () => {
+      try {
+        const trucoData = await trucosService.getTrucoById(id);
+        setTruco(trucoData);
+
+        // Si es tipo terrorífico, cargar los test cases
+        if (trucoData.tipo_truco === "terrorifico") {
+          const testData = await trucosService.getTestCases(id);
+          // Aquí podrías guardar los test cases en un estado si los necesitas
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    if (id) {
+      cargarTruco();
+    }
+  }, [id]);
 
   const handleRating = (rate) => {
     setRating(rate);
@@ -57,11 +81,10 @@ export default function SolveTrick() {
   const handleRunTests = async () => {
     setIsLoading(true);
     try {
-      // Aquí irá la llamada al backend cuando esté listo
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const result = await trucosService.submitSolution(id, code);
       setTestResults({
-        passed: true,
-        result: "Test pasado",
+        passed: result.passed,
+        result: result.message || "Test pasado",
       });
     } catch (error) {
       setTestResults({
@@ -73,6 +96,9 @@ export default function SolveTrick() {
     }
   };
 
+  if (error) return <div>Error: {error}</div>;
+  if (!truco) return <div>Cargando...</div>;
+
   return (
     <div className="bg-customDarkPurple text-white min-h-screen">
       <Header />
@@ -80,12 +106,9 @@ export default function SolveTrick() {
         <div className="flex justify-around w-full bg-customePurple p-4">
           <div className="w-1/2">
             <h1 className="text-super font-creepster mb-6">
-              ¿Podrás completar el truco?
+              {truco.titulo_truco}
             </h1>
-            <p className="text-title3 mb-8">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
+            <p className="text-title3 mb-8">{truco.descripcion_truco}</p>
           </div>
           <div
             className={`w-1/2 relative h-64 overflow-hidden cursor-pointer ${
@@ -95,13 +118,11 @@ export default function SolveTrick() {
           >
             <div className="flex flex-col space-y-4">
               <div className="rain-button bg-customDarkOrange px-6 py-2 shadow-lg rounded font-michroma text-title2">
-                JS
+                {truco.lenguaje_id}{" "}
+                {/* Aquí deberías mostrar el nombre del lenguaje */}
               </div>
               <div className="rain-button bg-customDarkOrange px-6 py-2 shadow-lg rounded font-michroma text-title2">
-                Dificultad
-              </div>
-              <div className="rain-button bg-customDarkOrange px-6 py-2 shadow-lg rounded font-michroma text-title2">
-                Categoría
+                {truco.tipo_truco.toUpperCase()}
               </div>
               <button
                 onClick={showPopup}
@@ -197,7 +218,7 @@ export default function SolveTrick() {
           onMouseDown={handleMouseDown}
         >
           <div className="flex justify-between items-center mb-4">
-            <p>Este es un trato especial...</p>
+            <p>Este es un trato especial para {truco.titulo_truco}</p>
             <button
               onClick={closePopup}
               className="text-xl top-2 right-2 absolute"

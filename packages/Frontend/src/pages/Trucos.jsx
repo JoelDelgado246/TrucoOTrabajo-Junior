@@ -1,139 +1,51 @@
 // src/pages/Trucos.jsx
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import Header from "../components/layout/Header";
 import DifficultySection from "../components/trucos/DifficultySection";
-
-const challenges = {
-  facil: [
-    {
-      id: "facil-1",
-      title: "SUMA SIMPLE",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "facil-2",
-      title: "CONTADOR",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "facil-3",
-      title: "TODO LIST",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "facil-4",
-      title: "CALCULADORA",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "facil-5",
-      title: "VALIDADOR",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "facil-6",
-      title: "CONVERSOR",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "facil-7",
-      title: "CONVERSOR",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "facil-8",
-      title: "CONVERSOR",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-  ],
-  medio: [
-    {
-      id: "medio-1",
-      title: "API REST",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "medio-1",
-      title: "API REST",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "medio-1",
-      title: "API REST",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    // ... Copiar y pegar 5 veces más cambiando id y title
-    {
-      id: "medio-6",
-      title: "AUTH SYSTEM",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-  ],
-  terrorifico: [
-    {
-      id: "terror-1",
-      title: "BLOCKCHAIN",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "terror-1",
-      title: "BLOCKCHAIN",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "terror-1",
-      title: "BLOCKCHAIN",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    {
-      id: "terror-1",
-      title: "BLOCKCHAIN",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-    // ... Copiar y pegar 5 veces más cambiando id y title
-    {
-      id: "terror-6",
-      title: "IA MODEL",
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      language: "JS",
-    },
-  ],
-};
+import { trucosService } from "../services/trucosService";
 
 export default function Trucos() {
+  const [trucos, setTrucos] = useState({
+    facil: [],
+    intermedio: [],
+    terrorifico: [],
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const cargarTrucos = async () => {
+      try {
+        const data = await trucosService.getAllTrucos();
+
+        // Agrupar trucos por dificultad
+        const trucosPorDificultad = data.reduce(
+          (acc, truco) => {
+            acc[truco.tipo_truco].push({
+              id: truco.truco_id,
+              title: truco.titulo_truco,
+              description: truco.descripcion_truco,
+              language: "JS", // Aquí deberías obtener el nombre del lenguaje
+            });
+            return acc;
+          },
+          { facil: [], intermedio: [], terrorifico: [] }
+        );
+
+        setTrucos(trucosPorDificultad);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarTrucos();
+  }, []);
+
+  if (loading) return <div>Cargando...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -142,21 +54,21 @@ export default function Trucos() {
         <div className="container mx-auto">
           <DifficultySection
             title="FÁCIL"
-            challenges={challenges.facil}
+            challenges={trucos.facil}
             titleColor="text-lime-400"
             difficulty="FACIL"
           />
 
           <DifficultySection
             title="MEDIO"
-            challenges={challenges.medio}
+            challenges={trucos.intermedio}
             titleColor="text-lime-400"
             difficulty="MEDIO"
           />
 
           <DifficultySection
             title="TERRORÍFICO"
-            challenges={challenges.terrorifico}
+            challenges={trucos.terrorifico}
             titleColor="text-lime-400"
             difficulty="TERRORIFICO"
           />

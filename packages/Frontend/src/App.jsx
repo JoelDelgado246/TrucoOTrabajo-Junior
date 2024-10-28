@@ -7,6 +7,7 @@ import Tratos from "./pages/Tratos";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import SolveTrick from "./pages/SolveTrick";
+import PruebaConexion from './pages/PruebaConexion';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/solve-trick" element={<SolveTrick />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
+        <Route path="/prueba" element={<PruebaConexion />} />
       </Routes>
     </Router>
   );
