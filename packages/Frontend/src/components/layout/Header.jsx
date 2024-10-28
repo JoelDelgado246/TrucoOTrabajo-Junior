@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
+import pumpkinLogo from "../../imgs/pumpkinLogo.png";
 
 export default function Header() {
 
@@ -12,9 +13,7 @@ export default function Header() {
         {/* Logo */}
         <div className="flex items-center gap-20">
           <Link to="/">
-            <div className="w-16 h-16 border-2 border-gray-400 flex items-center justify-center">
-              <span className="text-gray-400">Logo</span>
-            </div>
+            <img src={pumpkinLogo} alt="Logo de calabaza" className="w-20 h-20"/>
           </Link>
 
           <nav className="flex gap-16">
