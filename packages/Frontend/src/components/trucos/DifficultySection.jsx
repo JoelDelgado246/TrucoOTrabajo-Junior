@@ -1,8 +1,23 @@
 // src/components/trucos/DifficultySection.jsx
 import { useState } from "react";
 import ChallengeCard from "./ChallengeCard";
+import pumpkinEasy from "../../imgs/pumpkinEasy.png";
+import pumpkinMedium from "../../imgs/pumpkinMedium.png";
+import pumpkinHard from "../../imgs/pumpkinHard.png";
 
-export default function DifficultySection({ title, challenges, titleColor }) {
+// Objeto para mapear las imágenes según dificultad
+const difficultyImages = {
+  FACIL: pumpkinEasy,
+  MEDIO: pumpkinMedium,
+  TERRORIFICO: pumpkinHard,
+};
+
+export default function DifficultySection({
+  title,
+  challenges,
+  titleColor,
+  difficulty,
+}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const maxIndex = Math.ceil(challenges.length / 3) - 1;
 
@@ -22,9 +37,11 @@ export default function DifficultySection({ title, challenges, titleColor }) {
     <div className="mb-12">
       {/* Header del section */}
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-16 h-16 border-2 border-gray-400 flex items-center justify-center">
-          <span className="text-gray-400">Logo</span>
-        </div>
+        <img
+          src={difficultyImages[difficulty]}
+          alt={`${difficulty} difficulty`}
+          className="w-16 h-16 object-contain"
+        />
         <h2 className={`font-creepster text-[34px] ${titleColor}`}>{title}</h2>
       </div>
 

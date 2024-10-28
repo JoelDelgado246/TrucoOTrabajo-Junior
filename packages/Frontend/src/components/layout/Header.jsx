@@ -4,7 +4,6 @@ import { FaUserCircle } from "react-icons/fa";
 import pumpkinLogo from "../../imgs/pumpkinLogo.png";
 
 export default function Header() {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
@@ -13,13 +12,17 @@ export default function Header() {
         {/* Logo */}
         <div className="flex items-center gap-20">
           <Link to="/">
-            <img src={pumpkinLogo} alt="Logo de calabaza" className="w-20 h-20"/>
+            <img
+              src={pumpkinLogo}
+              alt="Logo de calabaza"
+              className="w-20 h-20"
+            />
           </Link>
 
           <nav className="flex gap-16">
             <Link
               to="/comunidad"
-              className="font-creepster text-[21px] text-black hover:text-purple-800"
+              className="font-creepster text-[21px] text-black hover:text-customPurple"
             >
               COMUNIDAD
             </Link>
@@ -27,21 +30,25 @@ export default function Header() {
               to="/trucos"
               className={`font-creepster text-[21px] ${
                 location.pathname === "/trucos"
-                  ? "text-purple-800"
+                  ? "text-customPurple"
                   : "text-black"
-              } hover:text-purple-800`}
+              } hover:text-customPurple`}
             >
               TRUCOS
             </Link>
             <Link
               to="/tratos"
-              className="font-creepster text-[21px] text-black hover:text-purple-800"
+              className={`font-creepster text-[21px] ${
+                location.pathname === "/tratos"
+                  ? "text-customPurple"
+                  : "text-black"
+              } hover:text-customPurple`}
             >
               TRATOS
             </Link>
             <Link
               to="/solve-trick"
-              className="font-creepster text-[21px] text-black hover:text-purple-800"
+              className="font-creepster text-[21px] text-black hover:text-customPurple"
             >
               Truco resuelto
             </Link>
