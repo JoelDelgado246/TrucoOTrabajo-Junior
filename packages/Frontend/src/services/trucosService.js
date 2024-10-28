@@ -45,7 +45,9 @@ export const trucosService = {
     // Enviar solución
     submitSolution: async (id, solution) => {
         try {
-            const response = await api.post(`/trucos/${id}/solucion`, { solution });
+            const response = await api.post(`/trucos/${id}/solucion`, {
+                code: solution  // Asegúrate de que se envíe como 'code'
+            });
             return response.data;
         } catch (error) {
             throw error;

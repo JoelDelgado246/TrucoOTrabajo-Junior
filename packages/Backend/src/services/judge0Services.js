@@ -27,6 +27,9 @@ export const executeCode = async (code, languageName, input = '') => {
     try {
         const languageId = LANGUAGE_IDS[languageName];
 
+        // Añadir delay entre peticiones
+        const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
         // Crear submission
         const { data: submission } = await judge0.post('/submissions', {
             source_code: code,
@@ -34,10 +37,16 @@ export const executeCode = async (code, languageName, input = '') => {
             stdin: input
         });
 
+        // Esperar un poco antes de pedir el resultado
+        await wait(2000);
+
         // Esperar resultado
         const { data: result } = await judge0.get(`/submissions/${submission.token}`);
         return result;
     } catch (error) {
+        if (error.response?.status === 429) {
+            throw new Error('Demasiadas peticiones. Por favor, espera un momento y vuelve a intentar.');
+        }
         throw error;
     }
 };

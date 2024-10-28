@@ -8,6 +8,8 @@ const app = express()
 app.use(cors({
   origin: 'http://localhost:5173' // Puerto donde corre tu frontend
 }));
+app.use(express.json())  // <-- Agregar esta línea
+app.use(express.urlencoded({ extended: true }))  // <-- También esta para formularios
 
 app.use(trucosRoutes)
 

@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import Editor from "@monaco-editor/react";
+import CodeEditor from "../components/trucos/CodeEditor";
 import Header from "../components/layout/Header";
 import TestResults from "../components/trucos/TestResults";
 import { trucosService } from "../services/trucosService";
@@ -15,6 +15,7 @@ export default function SolveTrick() {
   const [code, setCode] = useState("// Tu código aquí\n");
   const [testResults, setTestResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState(null);
   const popupRef = useRef(null);
 
@@ -77,14 +78,14 @@ export default function SolveTrick() {
       { once: true }
     );
   };
-
   const handleRunTests = async () => {
-    setIsLoading(true);
+    setIsRunning(true);
     try {
-      const result = await trucosService.submitSolution(id, code);
+      const response = await trucosService.submitSolution(id, code);
       setTestResults({
-        passed: result.passed,
-        result: result.message || "Test pasado",
+        passed: response.success,
+        results: response.results,
+        message: response.message,
       });
     } catch (error) {
       setTestResults({
@@ -92,7 +93,7 @@ export default function SolveTrick() {
         error: error.message,
       });
     } finally {
-      setIsLoading(false);
+      setIsRunning(false);
     }
   };
 
@@ -173,40 +174,39 @@ export default function SolveTrick() {
           {/* Response Area */}
           <div className="flex-1 bg-white text-black p-6 rounded">
             <h2 className="text-title2 font-michroma mb-4">Tu respuesta</h2>
-            <Editor
-              height="300px"
-              defaultLanguage="javascript"
-              defaultValue={code}
-              theme="vs-dark"
+            <CodeEditor
+              language={truco.nombre_lenguaje}
+              code={code}
               onChange={setCode}
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                lineNumbers: "on",
-                scrollBeyondLastLine: false,
-                automaticLayout: true,
-              }}
             />
             {testResults && (
               <div className="mt-4">
-                <TestResults results={testResults} isLoading={isLoading} />
+                <h3 className="font-bold mb-2">Resultados:</h3>
+                {testResults.results?.map((result, index) => (
+                  <div
+                    key={index}
+                    className={`p-4 rounded mb-2 ${
+                      result.passed ? "bg-green-100" : "bg-red-100"
+                    }`}
+                  >
+                    <p>Test {index + 1}:</p>
+                    <p>Input: {result.input}</p>
+                    <p>Expected: {result.expected}</p>
+                    <p>Got: {result.got}</p>
+                    {result.error && (
+                      <p className="text-red-500">Error: {result.error}</p>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
-            <div className="flex gap-4 mt-4">
-              <button
-                onClick={handleRunTests}
-                disabled={isLoading}
-                className="bg-customGreen px-6 py-2 rounded font-michroma text-title2 text-black hover:bg-green-700 hover:text-white disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
-                {isLoading ? "Probando..." : "Probar Código"}
-              </button>
-              <button
-                onClick={showPopup}
-                className="bg-customPurple text-white px-6 py-2 rounded font-michroma text-title2 hover:bg-purple-700"
-              >
-                ¿Trato?
-              </button>
-            </div>
+            <button
+              onClick={handleRunTests}
+              disabled={isRunning}
+              className="bg-customGreen px-6 py-2 rounded font-michroma text-title2"
+            >
+              {isRunning ? "Ejecutando..." : "Ejecutar Código"}
+            </button>
           </div>
         </div>
       </main>
