@@ -75,3 +75,13 @@ INSERT INTO Trato (truco_id, titulo_trato, url_imagen, texto_contenido, enlace_t
 (3, 'Tutorial de YouTube', 'url_imagen2.jpg', NULL, 'https://youtube.com/tutorial1', NULL, 'Tutorial sobre Java.', NULL),
 (5, 'Curso Gratuito', 'url_imagen3.jpg', NULL, NULL, 'https://curso.com/curso1', NULL, 'Curso avanzado sobre Ruby.')
 ON DUPLICATE KEY UPDATE texto_contenido = VALUES(texto_contenido);
+
+INSERT INTO Comentario (truco_id, usuario_id, contenido, fecha_comentario) VALUES 
+(1, 1, 'Muy buen reto, aprendí bastante sobre Python.', '2024-10-26 13:00:00'),
+(1, 3, 'Fue interesante resolverlo.', '2024-10-25 14:30:00'),
+(2, 2, 'Aprendí mucho sobre variables en JavaScript.', '2024-10-25 15:00:00'),
+(3, 4, 'Las condicionales en Java son muy útiles.', '2024-10-24 16:30:00'),
+(4, 6, 'Buen reto sobre bucles.', '2024-10-23 10:30:00'),
+(5, 8, 'Este reto de clases en Ruby fue complicado pero interesante.', '2024-10-22 09:00:00'),
+(10, 10, 'Los eventos en C# son muy potentes.', '2024-10-21 13:45:00')
+ON DUPLICATE KEY UPDATE contenido = VALUES(contenido);

@@ -67,3 +67,14 @@ CREATE TABLE IF NOT EXISTS Trato (
     descripcion_curso TEXT,
     FOREIGN KEY (truco_id) REFERENCES Truco(truco_id)
 );
+
+-- Crear tabla Comentario si no existe
+CREATE TABLE IF NOT EXISTS Comentario (
+    comentario_id INT PRIMARY KEY AUTO_INCREMENT,
+    truco_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    contenido TEXT NOT NULL,
+    fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (truco_id) REFERENCES Truco(truco_id) ON DELETE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id) ON DELETE CASCADE
+);
