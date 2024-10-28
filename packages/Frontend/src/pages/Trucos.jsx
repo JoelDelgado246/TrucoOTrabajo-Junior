@@ -144,18 +144,21 @@ export default function Trucos() {
             title="FÁCIL"
             challenges={challenges.facil}
             titleColor="text-lime-400"
+            difficulty="FACIL"
           />
 
           <DifficultySection
             title="MEDIO"
             challenges={challenges.medio}
             titleColor="text-lime-400"
+            difficulty="MEDIO"
           />
 
           <DifficultySection
             title="TERRORÍFICO"
             challenges={challenges.terrorifico}
             titleColor="text-lime-400"
+            difficulty="TERRORIFICO"
           />
         </div>
       </main>
