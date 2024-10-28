@@ -208,4 +208,17 @@ export const postComment = async (req, res) => {
   }
 };
 
+export const getTestCases = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const [tests] = await pool.query(
+          'SELECT * FROM Test WHERE truco_id = ?',
+          [id]
+      );
+      res.json(tests);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
+
 
