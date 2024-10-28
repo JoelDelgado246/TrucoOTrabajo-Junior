@@ -13,7 +13,7 @@ export default function Home() {
     { id: 6 },
     { id: 7 },
     { id: 8 },
-  ]; // Luego podemos agregar más propiedades según necesitemos
+  ]; 
 
   return (
     <div className="min-h-screen flex flex-col">
