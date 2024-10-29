@@ -23,4 +23,9 @@ app.use('/tratos',tratosRoutes)
 
 app.listen(process.env.PORT, () => {
     console.log('Servidor corriendo en', process.env.PORT);
+    console.log('db host',process.env.DB_HOST);
+    console.log('db user',process.env.DB_USER);
+    console.log('db pw',process.env.DB_PASSWORD);
+    console.log('db database',process.env.DB_NAME);
+    console.log(process.env.DB_PORT);
   });
