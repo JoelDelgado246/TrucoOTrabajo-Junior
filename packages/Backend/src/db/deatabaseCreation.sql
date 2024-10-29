@@ -1,13 +1,11 @@
 -- Crear la base de datos si no existe y usarla
 CREATE DATABASE IF NOT EXISTS PlataformaTrucoTrato;
 USE PlataformaTrucoTrato;
-
 -- Crear tabla Lenguaje si no existe
 CREATE TABLE IF NOT EXISTS Lenguaje (
     lenguaje_id INT PRIMARY KEY AUTO_INCREMENT,
     nombre_lenguaje VARCHAR(40) NOT NULL
 );
-
 -- Crear tabla Truco (Retos) si no existe
 CREATE TABLE IF NOT EXISTS Truco (
     truco_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -19,7 +17,6 @@ CREATE TABLE IF NOT EXISTS Truco (
     url_imagen VARCHAR(70),
     FOREIGN KEY (lenguaje_id) REFERENCES Lenguaje(lenguaje_id)
 );
-
 -- Crear tabla Opcion_Respuesta si no existe
 CREATE TABLE IF NOT EXISTS Opcion_Respuesta (
     opcion_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -28,7 +25,6 @@ CREATE TABLE IF NOT EXISTS Opcion_Respuesta (
     es_correcto BOOLEAN NOT NULL,
     FOREIGN KEY (truco_id) REFERENCES Truco(truco_id)
 );
-
 -- Crear tabla Test si no existe
 CREATE TABLE IF NOT EXISTS Test (
     test_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -36,7 +32,6 @@ CREATE TABLE IF NOT EXISTS Test (
     test_json JSON NOT NULL,
     FOREIGN KEY (truco_id) REFERENCES Truco(truco_id)
 );
-
 -- Crear tabla Trato (Recompensas) si no existe
 CREATE TABLE IF NOT EXISTS Trato (
     trato_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -50,7 +45,6 @@ CREATE TABLE IF NOT EXISTS Trato (
     descripcion_curso TEXT,
     FOREIGN KEY (truco_id) REFERENCES Truco(truco_id)
 );
-
 -- Crear tabla Comentario si no existe
 CREATE TABLE IF NOT EXISTS Comentario (
     comentario_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -59,3 +53,9 @@ CREATE TABLE IF NOT EXISTS Comentario (
     fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (truco_id) REFERENCES Truco(truco_id) ON DELETE CASCADE
 );
+DROP TABLE IF EXISTS Comentario;
+DROP TABLE IF EXISTS Trato;
+DROP TABLE IF EXISTS Test;
+DROP TABLE IF EXISTS Opcion_Respuesta;
+DROP TABLE IF EXISTS Truco;
+DROP TABLE IF EXISTS Lenguaje;
