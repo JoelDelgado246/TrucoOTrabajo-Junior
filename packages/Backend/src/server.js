@@ -27,8 +27,11 @@ app.get('/prueba', async (req, res) => {
 app.use('/trucos', trucosRoutes);
 app.use('/tratos', tratosRoutes);
 
-// Iniciar el servidor
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+app.listen(process.env.PORT, () => {
+    console.log('Servidor corriendo en', process.env.PORT);
+    console.log('db host',process.env.DB_HOST);
+    console.log('db user',process.env.DB_USER);
+    console.log('db pw',process.env.DB_PASSWORD);
+    console.log('db database',process.env.DB_NAME);
+    console.log(process.env.DB_PORT);
+  });
