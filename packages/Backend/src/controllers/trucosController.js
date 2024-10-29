@@ -56,7 +56,8 @@ export const getTrucos = async (req, res) => {
       descripcion: truco.descripcion_truco,
       dificultad: truco.tipo_truco,
       imagen: truco.url_imagen,
-      opciones: opcionesPorTruco[truco.truco_id] || [], // Agregar opciones de respuesta al truco
+      instrucciones: truco.intrucciones_truco, // Agregar esta línea
+      opciones: opcionesPorTruco[truco.truco_id] || [],
     }));
 
     res.json(id ? trucosMapeados[0] : trucosMapeados);

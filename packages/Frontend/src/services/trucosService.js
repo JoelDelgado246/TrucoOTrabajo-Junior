@@ -76,6 +76,27 @@ export const trucosService = {
         } catch (error) {
             throw error;
         }
+    },
+
+    guardarPuntuacion: async (trucoId, puntuacion) => {
+        try {
+            const response = await api.post(`/trucos/${trucoId}/puntuacion`, {
+                puntuacion
+            });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    // Método para obtener un trato
+    getTrato: async (tratoId) => {
+        try {
+            const response = await api.get(`/tratos/${tratoId}`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
     }
 };
 
