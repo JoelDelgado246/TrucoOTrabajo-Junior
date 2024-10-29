@@ -8,24 +8,6 @@ CREATE TABLE IF NOT EXISTS Lenguaje (
     nombre_lenguaje VARCHAR(40) NOT NULL
 );
 
--- Crear tabla Usuario si no existe
-CREATE TABLE IF NOT EXISTS Usuario (
-    usuario_id INT PRIMARY KEY AUTO_INCREMENT,
-    nombre_usuario VARCHAR(50) NOT NULL,
-    mail VARCHAR(50) NOT NULL,
-    contraseña VARCHAR(40) NOT NULL,
-    fecha_creacion DATE NOT NULL
-);
-
--- Crear tabla Progreso_Usuario si no existe
-CREATE TABLE IF NOT EXISTS Progreso_Usuario (
-    progreso_id INT PRIMARY KEY AUTO_INCREMENT,
-    usuario_id INT NOT NULL,
-    reto_completado BOOLEAN NOT NULL,
-    fecha_completado TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
-);
-
 -- Crear tabla Truco (Retos) si no existe
 CREATE TABLE IF NOT EXISTS Truco (
     truco_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -33,6 +15,7 @@ CREATE TABLE IF NOT EXISTS Truco (
     titulo_truco VARCHAR(50) NOT NULL,
     descripcion_truco TEXT NOT NULL,
     tipo_truco ENUM('facil', 'intermedio', 'terrorifico') NOT NULL,
+    intrucciones_truco TEXT,
     url_imagen VARCHAR(70),
     FOREIGN KEY (lenguaje_id) REFERENCES Lenguaje(lenguaje_id)
 );
@@ -72,9 +55,7 @@ CREATE TABLE IF NOT EXISTS Trato (
 CREATE TABLE IF NOT EXISTS Comentario (
     comentario_id INT PRIMARY KEY AUTO_INCREMENT,
     truco_id INT NOT NULL,
-    usuario_id INT NOT NULL,
     contenido TEXT NOT NULL,
     fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (truco_id) REFERENCES Truco(truco_id) ON DELETE CASCADE,
-    FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id) ON DELETE CASCADE
 );
