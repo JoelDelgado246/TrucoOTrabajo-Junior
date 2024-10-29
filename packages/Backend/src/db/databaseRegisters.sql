@@ -142,13 +142,6 @@ INSERT INTO Test (truco_id, test_json) VALUES
 (30, '{"input": [5], "expectedOutput": 120, "description": "Cálculo factorial con memoización"}');
 
 
--- Insertar datos en la tabla Trato (Recompensas) si no existen
-INSERT INTO Trato (truco_id, titulo_trato, url_imagen, texto_contenido, enlace_tutorial, enlace_curso, descripcion_tutorial, descripcion_curso) VALUES 
-(1, 'Recompensa texto', 'url_imagen1.jpg', 'Bien hecho en el reto fácil.', NULL, NULL, NULL, NULL),
-(3, 'Tutorial de YouTube', 'url_imagen2.jpg', NULL, 'https://youtube.com/tutorial1', NULL, 'Tutorial sobre Java.', NULL),
-(5, 'Curso Gratuito', 'url_imagen3.jpg', NULL, NULL, 'https://curso.com/curso1', NULL, 'Curso avanzado sobre Ruby.')
-ON DUPLICATE KEY UPDATE texto_contenido = VALUES(texto_contenido);
-
 INSERT INTO Comentario (truco_id, contenido) VALUES
 -- Comentarios para trucos fáciles
 (1, 'Este truco fue muy fácil de resolver. Me ayudó a entender la suma en JavaScript.'),
