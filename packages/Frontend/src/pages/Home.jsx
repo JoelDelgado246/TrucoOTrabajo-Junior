@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import Header from "../components/layout/Header";
 import Slider from "../components/ui/Slider";
+import TratoSlider from "../components/ui/TreatSlider"
 import SectionCard from "../components/ui/SectionCard";
 import Footer from "../components/layout/Footer";
 import trucosService from "../services/trucosService";
+import tratosService from "../services/tratoService";
 
 function getRandomItems(arr, num) {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
@@ -13,6 +15,7 @@ function getRandomItems(arr, num) {
 export default function Home() {
 
   const [sliderItems, setSliderItems] = useState([]);
+  const [tratoItems, setTratoItems] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -26,8 +29,19 @@ export default function Home() {
         setError("Error al cargar los trucos");
       }
     };
+    const fetchTratos = async () => {
+      try{
+        const data = await tratosService.getAllTratos();
+        const randomItems = getRandomItems(data, 9);
+        setTratoItems(randomItems);
+      }catch (error){
+        console.error("Error fetching tratos: ", error);
+        setError("Error al cargar los tratos");
+      }
+    }
 
     fetchTrucos();
+    fetchTratos();
   }, []);
 
   if (error) return <div>{error}</div>;
@@ -53,7 +67,7 @@ export default function Home() {
           />
         </section>
         <section className="py-16">
-          <Slider items={sliderItems} />
+          <TratoSlider items={tratoItems} />
         </section>
         <section>
           <SectionCard
