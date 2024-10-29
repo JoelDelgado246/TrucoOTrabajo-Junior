@@ -7,12 +7,12 @@ export default function ChallengeCard({ id, title, description, language }) {
       <h3 className="font-creepster text-[28px] text-black mb-3">{title}</h3>
       <p className="text-black text-sm mb-4 flex-grow">{description}</p>
       <div className="flex justify-between items-center mt-auto">
-        <span className="bg-orange-400 text-black px-3 py-1 rounded-lg text-sm">
+        <span className="bg-orange-400 text-black px-6 py-1 rounded-lg text-sm">
           {language}
         </span>
         <Link 
           to={`/trucos/${id}`} 
-          className="bg-customPurple text-white font-creepster px-3 py-1 rounded-lg hover:bg-purple-900 text-sm"
+          className="bg-customPurple text-black font-creepster px-6 py-2 rounded-lg hover:bg-customDarkPurple hover:text-white text-sm"
         >
           ¿TE ATREVES?
         </Link>

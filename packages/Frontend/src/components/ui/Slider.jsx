@@ -1,5 +1,13 @@
-// src/components/ui/Slider.jsx
 import { useState, useEffect } from "react";
+import pumpkinEasy from "../../imgs/pumpkinEasy.png";
+import pumpkinMedium from "../../imgs/pumpkinMedium.png";
+import pumpkinHard from "../../imgs/pumpkinHard.png";
+
+const difficultyIcons = {
+  facil: pumpkinEasy,
+  intermedio: pumpkinMedium,
+  terrorifico: pumpkinHard,
+};
 
 export default function Slider({ items }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -13,7 +21,7 @@ export default function Slider({ items }) {
       }, 1500);
     }
     return () => clearInterval(interval);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, currentIndex]);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % items.length);
@@ -28,28 +36,37 @@ export default function Slider({ items }) {
 
   return (
     <div
-      className="relative bg-customDarkPurple p-8 rounded-[50px] mx-4"
+      className="relative bg-customDarkPurple p-8 rounded-[50px] mx-8"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="flex gap-8 overflow-hidden">
+      <div
+        className="flex gap-8 overflow-hidden"
+      >
         {items.map((item, index) => (
           <div
             key={index}
-            className="min-w-[250px] h-[250px] bg-customOrange rounded-lg transition-transform duration-500"
+            className="min-w-[250px] h-[250px] bg-customOrange rounded-lg transition-transform duration-500 transform hover:scale-105"
             style={{
               transform: `translateX(-${currentIndex * (250 + 32)}px)`, // 32px es el gap (gap-8)
             }}
           >
-            {/* Contenido de la card */}
+            <div className="p-4 flex flex-col justify-between h-full">
+              <h3 className="text-title2 font-creepster mb-2 text-center">{item.titulo}</h3>
+              <p className="text-normal font-michroma mb-4">{item.descripcion}</p>
+              <img
+                src={difficultyIcons[item.dificultad]}
+                alt={item.dificultad}
+                className="w-10 h-10 mx-auto mt-4"
+              />
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Botones de navegación */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-customGreen rounded-lg w-10 h-10 flex items-center justify-center hover:bg-lime-300 transition-colors"
+        className="absolute left-2 top-1/2 -translate-y-1/2 bg-customGreen rounded-lg w-10 h-10 flex items-center justify-center hover:bg-lime-300 transition-colors"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +85,7 @@ export default function Slider({ items }) {
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-customGreen rounded-lg w-10 h-10 flex items-center justify-center hover:bg-lime-300 transition-colors"
+        className="absolute right-2 top-1/2 -translate-y-1/2 bg-customGreen rounded-lg w-10 h-10 flex items-center justify-center hover:bg-lime-300 transition-colors"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -1,4 +1,3 @@
-// src/pages/Trucos.jsx
 import { useState, useEffect } from "react";
 import Header from "../components/layout/Header";
 import DifficultySection from "../components/trucos/DifficultySection";
@@ -17,33 +16,28 @@ export default function Trucos() {
     const cargarTrucos = async () => {
       try {
         const data = await trucosService.getAllTrucos();
-        console.log("Datos recibidos:", data); // Para debugging
 
-        // Inicializar el objeto con arrays vacíos
         const trucosPorDificultad = {
           facil: [],
           intermedio: [],
           terrorifico: [],
         };
 
-        // Agrupar trucos por dificultad
         data.forEach((truco) => {
-          // Adaptar la estructura que viene del backend
           const trucoFormateado = {
             id: truco.id,
             title: truco.titulo,
             description: truco.descripcion,
-            language: "JS", // Por ahora hardcodeado, luego podemos ajustarlo
+            language: "JS", 
             difficulty: truco.dificultad,
           };
 
-          // Asegurarse de que el tipo existe antes de hacer push
           if (trucosPorDificultad[truco.dificultad]) {
             trucosPorDificultad[truco.dificultad].push(trucoFormateado);
           }
         });
 
-        console.log("Trucos procesados:", trucosPorDificultad); // Para debugging
+        console.log("Trucos procesados:", trucosPorDificultad);
         setTrucos(trucosPorDificultad);
       } catch (err) {
         setError(err.message);
@@ -62,7 +56,7 @@ export default function Trucos() {
     <div className="min-h-screen">
       <Header />
 
-      <main className="bg-customPurple py-12 px-6">
+      <main className="bg-customPurple py-12 px-6s">
         <div className="container mx-auto">
           <DifficultySection
             title="FÁCIL"

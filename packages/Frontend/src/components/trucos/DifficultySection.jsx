@@ -1,11 +1,9 @@
-// src/components/trucos/DifficultySection.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChallengeCard from "./ChallengeCard";
 import pumpkinEasy from "../../imgs/pumpkinEasy.png";
 import pumpkinMedium from "../../imgs/pumpkinMedium.png";
 import pumpkinHard from "../../imgs/pumpkinHard.png";
 
-// Objeto para mapear las imágenes según dificultad
 const difficultyImages = {
   FACIL: pumpkinEasy,
   MEDIO: pumpkinMedium,
@@ -19,7 +17,18 @@ export default function DifficultySection({
   difficulty,
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const maxIndex = Math.ceil(challenges.length / 3) - 1;
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const maxIndex = isMobile ? challenges.length - 1 : Math.ceil(challenges.length / 3) - 1;
 
   const nextSlide = () => {
     if (currentIndex < maxIndex) {
@@ -35,7 +44,6 @@ export default function DifficultySection({
 
   return (
     <div className="mb-12">
-      {/* Header del section */}
       <div className="flex items-center gap-4 mb-6">
         <img
           src={difficultyImages[difficulty]}
@@ -45,81 +53,85 @@ export default function DifficultySection({
         <h2 className={`font-creepster text-[34px] ${titleColor}`}>{title}</h2>
       </div>
 
-      {/* Contenedor del slider y flechas */}
       <div className="flex items-center">
-        {/* Botón Anterior */}
         {currentIndex > 0 && (
-          <div className="w-8 flex-shrink-0 mr-4">
-            <button
-              onClick={prevSlide}
-              className="text-lime-400 hover:text-lime-500 transition-colors"
+          <button
+            onClick={prevSlide}
+            className="text-customDarkOrange hover:text-customGreen transition-colors p-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={3}
+              stroke="currentColor"
+              className="w-8 h-8"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={3}
-                stroke="currentColor"
-                className="w-8 h-8"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 19.5L8.25 12l7.5-7.5"
-                />
-              </svg>
-            </button>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5L8.25 12l7.5-7.5"
+              />
+            </svg>
+          </button>
         )}
 
-        {/* Contenedor del Slider */}
         <div className="overflow-hidden flex-grow">
           <div
-            className="flex gap-4 transition-transform duration-500 ease-in-out"
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{
+              transform: `translateX(-${currentIndex * 100}%)`,
+            }}
           >
-            {Array.from({ length: Math.ceil(challenges.length / 3) }).map(
-              (_, groupIndex) => (
-                <div key={groupIndex} className="flex gap-4 min-w-full">
-                  {challenges
-                    .slice(groupIndex * 3, (groupIndex + 1) * 3)
-                    .map((challenge) => (
-                      <div
-                        key={challenge.id}
-                        className="w-[calc(33.33%-1rem)] h-[280px]" // Altura fija para todas las cards
-                      >
-                        <ChallengeCard {...challenge} />
-                      </div>
-                    ))}
-                </div>
-              )
-            )}
+            {isMobile
+              ? challenges.map((challenge) => (
+                  <div
+                    key={challenge.id}
+                    className="flex-shrink-0 w-full h-[280px] bg-customOrange p-4 rounded-lg shadow-md"
+                  >
+                    <ChallengeCard {...challenge} />
+                  </div>
+                ))
+              : Array.from({ length: Math.ceil(challenges.length / 3) }).map(
+                  (_, groupIndex) => (
+                    <div key={groupIndex} className="flex gap-4 min-w-full">
+                      {challenges
+                        .slice(groupIndex * 3, (groupIndex + 1) * 3)
+                        .map((challenge) => (
+                          <div
+                            key={challenge.id}
+                            className="w-1/3 h-[280px] bg-customOrange p-4 rounded-lg shadow-md"
+                          >
+                            <ChallengeCard {...challenge} />
+                          </div>
+                        ))}
+                    </div>
+                  )
+                )}
           </div>
         </div>
 
         {/* Botón Siguiente */}
         {currentIndex < maxIndex && (
-          <div className="w-8 flex-shrink-0 ml-4">
-            <button
-              onClick={nextSlide}
-              className="text-lime-400 hover:text-lime-500 transition-colors"
+          <button
+            onClick={nextSlide}
+            className="text-customDarkOrange hover:text-customGreen transition-colors p-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={3}
+              stroke="currentColor"
+              className="w-8 h-8"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={3}
-                stroke="currentColor"
-                className="w-8 h-8"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                />
-              </svg>
-            </button>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8.25 4.5l7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          </button>
         )}
       </div>
     </div>
