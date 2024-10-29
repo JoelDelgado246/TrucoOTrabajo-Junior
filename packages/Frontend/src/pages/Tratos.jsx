@@ -16,7 +16,7 @@ export default function Truco() {
       const fetchTratos = async () => {
         try {
           const responses = await Promise.all(storedTratoIds.map(id => 
-            axios.get(`http://localhost:3000/tratos?id=${id}`)
+            axios.get(`http://localhost:3001/tratos?id=${id}`)
           ));
           const fetchedTratos = responses.map(response => response.data[0]);
 
