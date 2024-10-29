@@ -1,19 +1,36 @@
+import { useState, useEffect } from "react";
 import Header from "../components/layout/Header";
 import Slider from "../components/ui/Slider";
 import SectionCard from "../components/ui/SectionCard";
 import Footer from "../components/layout/Footer";
+import trucosService from "../services/trucosService";
+
+function getRandomItems(arr, num) {
+  const shuffled = [...arr].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, num);
+}
 
 export default function Home() {
-  const sliderItems = [
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
-    { id: 5 },
-    { id: 6 },
-    { id: 7 },
-    { id: 8 },
-  ]; 
+
+  const [sliderItems, setSliderItems] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchTrucos = async () => {
+      try {
+        const data = await trucosService.getAllTrucos();
+        const randomItems = getRandomItems(data, 9);
+        setSliderItems(randomItems); 
+      } catch (error) {
+        console.error("Error fetching trucos:", error);
+        setError("Error al cargar los trucos");
+      }
+    };
+
+    fetchTrucos();
+  }, []);
+
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -25,8 +42,8 @@ export default function Home() {
 
         <section className="space-y-8">
           <SectionCard
-            description="¿Te atreves a enfrentar los desafíos que acechan en la noche de Halloween? 
-            Cada truco esconde un reto único, una prueba que pondrá a prueba tu astucia y tus habilidades.
+            description="¿Te atreves a enfrentar los desafíos que acechan en la noche? 
+            Cada truco esconde un reto único, una prueba que pondrá a prueba tus habilidades.
              Al resolverlos, ganarás valiosos tratos, conocimientos ocultos y recompensas hechizadas 
              que solo los más valientes pueden obtener. No temas a lo desconocido… ¡acepta el reto y 
              adéntrate en la oscuridad para descubrir qué misterios te esperan!"
@@ -42,8 +59,7 @@ export default function Home() {
           <SectionCard
             description="Para obtener estos tratos, primero debes superar los retos más oscuros y desafiantes.
               Cada trato es un premio encantado, una recompensa misteriosa reservada solo para quienes logran
-              completar los trucos. Estos tesoros contienen secretos antiguos y poderes ocultos, esperando 
-              ser desatados por los más valientes. ¿Estás listo para reclamar tu trato y descubrir qué maravillas
+              completar los trucos. ¿Estás listo para reclamar tu trato y descubrir qué maravillas
               y enigmas te esperan?"
             labelText="¡Tus tratos espeluznantes!"
             buttonText="TRATOS"
