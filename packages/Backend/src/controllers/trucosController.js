@@ -7,7 +7,7 @@ export const getTrucos = async (req, res) => {
   const { id, dificultad } = req.query;
 
   try {
-    let query = 'SELECT * FROM Truco';
+    let query = 'SELECT t.*, l.nombre_lenguaje FROM Truco t JOIN Lenguaje l ON t.lenguaje_id = l.lenguaje_id';
     const params = [];
 
     if (id) {
@@ -28,6 +28,15 @@ export const getTrucos = async (req, res) => {
             ? `No se encontraron trucos para la dificultad "${dificultad}"`
             : "No se encontraron trucos",
       });
+    }
+
+    // Si es un truco específico y es terrorífico, obtener sus test cases
+    if (id && trucos[0].tipo_truco === 'terrorifico') {
+      const [testCases] = await pool.query(
+        'SELECT * FROM Test WHERE truco_id = ?',
+        [id]
+      );
+      trucos[0].test_cases = testCases;
     }
 
     // Obtener las opciones de respuesta para los trucos seleccionados
@@ -61,6 +70,7 @@ export const getTrucos = async (req, res) => {
     }));
 
     res.json(id ? trucosMapeados[0] : trucosMapeados);
+    // res.json(id ? trucos[0] : trucos);
   } catch (error) {
     res.status(500).json({ message: "Error al obtener los trucos", error });
   }

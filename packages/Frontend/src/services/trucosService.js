@@ -26,15 +26,6 @@ export const trucosService = {
         }
     },
 
-    // Obtener test cases para trucos terroríficos
-    getTestCases: async (trucoId) => {
-        try {
-            const response = await api.get(`/trucos/${trucoId}/test`);
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
-    },
 
     // Obtener opciones de respuesta para trucos fáciles
     getOpcionesRespuesta: async (trucoId) => {
@@ -47,13 +38,12 @@ export const trucosService = {
     },
 
     // Enviar solución
-    submitSolution: async (id, solution) => {
+    submitSolution: async (trucoId, code) => {
         try {
-            const response = await api.post(`/trucos/${id}/solucion`, {
-                code: solution  // Asegúrate de que se envíe como 'code'
-            });
+            const response = await api.post(`/trucos/${trucoId}/solucion`, { code });
             return response.data;
         } catch (error) {
+            console.error('Error al enviar solución:', error);
             throw error;
         }
     },

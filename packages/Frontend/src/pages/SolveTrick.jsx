@@ -6,6 +6,7 @@ import TestResults from "../components/trucos/TestResults";
 import MultipleChoice from "../components/trucos/MultipleChoice";
 import { trucosService } from "../services/trucosService";
 import "../css/SolveTrick.css";
+import { executeCode, getCodeTemplate } from "../services/judge0Service";
 
 export default function SolveTrick() {
   const { id } = useParams(); // Para obtener el ID del truco de la URL
@@ -48,6 +49,13 @@ export default function SolveTrick() {
     }
   }, [id]);
 
+  // Inicializar el código con la plantilla
+  useEffect(() => {
+    if (truco && truco.dificultad === "terrorifico") {
+      setCode(getCodeTemplate(truco.id));
+    }
+  }, [truco]);
+
   const toggleAnimation = (event) => {
     event.stopPropagation();
     setIsAnimationPlaying(!isAnimationPlaying);
@@ -81,16 +89,34 @@ export default function SolveTrick() {
       { once: true }
     );
   };
-  // Actualizar handleRunTests y handleSubmitAnswer para usar handleSuccess
+
+  // Actualizar handleRunTests
+  // En SolveTrick.jsx
   const handleRunTests = async () => {
     setIsRunning(true);
     try {
-      const response = await trucosService.submitSolution(id, code);
-      handleSuccess(response);
+      // Como el truco ya viene con sus test cases, los usamos directamente
+      const response = await trucosService.submitSolution(truco.id, code);
+
+      setTestResults({
+        passed: response.success,
+        results: response.results,
+        message: response.message,
+      });
+
+      if (response.success) {
+        handleSuccess(response);
+      }
     } catch (error) {
+      console.error("Error al ejecutar los tests:", error);
       setTestResults({
         passed: false,
-        error: error.message,
+        results: [
+          {
+            passed: false,
+            error: error.message,
+          },
+        ],
       });
     } finally {
       setIsRunning(false);
@@ -259,6 +285,7 @@ export default function SolveTrick() {
                   language="javascript" // Siempre será JavaScript
                   code={code}
                   onChange={setCode}
+                  trucoId={truco?.id} // Pasar el ID del truco
                 />
                 {testResults && (
                   <div className="mt-4">
