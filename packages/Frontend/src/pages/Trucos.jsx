@@ -17,21 +17,33 @@ export default function Trucos() {
     const cargarTrucos = async () => {
       try {
         const data = await trucosService.getAllTrucos();
+        console.log("Datos recibidos:", data); // Para debugging
+
+        // Inicializar el objeto con arrays vacíos
+        const trucosPorDificultad = {
+          facil: [],
+          intermedio: [],
+          terrorifico: [],
+        };
 
         // Agrupar trucos por dificultad
-        const trucosPorDificultad = data.reduce(
-          (acc, truco) => {
-            acc[truco.tipo_truco].push({
-              id: truco.truco_id,
-              title: truco.titulo_truco,
-              description: truco.descripcion_truco,
-              language: "JS", // Aquí deberías obtener el nombre del lenguaje
-            });
-            return acc;
-          },
-          { facil: [], intermedio: [], terrorifico: [] }
-        );
+        data.forEach((truco) => {
+          // Adaptar la estructura que viene del backend
+          const trucoFormateado = {
+            id: truco.id,
+            title: truco.titulo,
+            description: truco.descripcion,
+            language: "JS", // Por ahora hardcodeado, luego podemos ajustarlo
+            difficulty: truco.dificultad,
+          };
 
+          // Asegurarse de que el tipo existe antes de hacer push
+          if (trucosPorDificultad[truco.dificultad]) {
+            trucosPorDificultad[truco.dificultad].push(trucoFormateado);
+          }
+        });
+
+        console.log("Trucos procesados:", trucosPorDificultad); // Para debugging
         setTrucos(trucosPorDificultad);
       } catch (err) {
         setError(err.message);

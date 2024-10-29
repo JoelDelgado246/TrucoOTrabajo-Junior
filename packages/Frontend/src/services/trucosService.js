@@ -3,11 +3,14 @@ import api from './api';
 
 export const trucosService = {
     // Obtener todos los trucos
-    getAllTrucos: async () => {
+    getAllTrucos: async (params = {}) => {
         try {
-            const response = await api.get('/trucos');
+            // Construir query string si hay params
+            const queryString = params.id ? `?id=${params.id}` : '';
+            const response = await api.get(`/trucos${queryString}`);
             return response.data;
         } catch (error) {
+            console.error('Error en getAllTrucos:', error);
             throw error;
         }
     },
@@ -18,6 +21,7 @@ export const trucosService = {
             const response = await api.get(`/trucos/${id}`);
             return response.data;
         } catch (error) {
+            console.error('Error en getTrucoById:', error);
             throw error;
         }
     },
@@ -57,7 +61,7 @@ export const trucosService = {
     // Obtener comentarios
     getComments: async (id) => {
         try {
-            const response = await api.get(`/trucos/${id}/comentarios`);
+            const response = await api.get(`/trucos/${id}/comments`);
             return response.data;
         } catch (error) {
             throw error;
@@ -67,7 +71,7 @@ export const trucosService = {
     // Publicar comentario
     postComment: async (id, comment) => {
         try {
-            const response = await api.post(`/trucos/${id}/comentarios`, { comment });
+            const response = await api.post(`/trucos/${id}/comments`, { comment });
             return response.data;
         } catch (error) {
             throw error;

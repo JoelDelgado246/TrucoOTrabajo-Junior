@@ -9,13 +9,14 @@ import "../css/SolveTrick.css";
 export default function SolveTrick() {
   const { id } = useParams(); // Para obtener el ID del truco de la URL
   const [truco, setTruco] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [rating, setRating] = useState(0);
   const [isAnimationPlaying, setIsAnimationPlaying] = useState(true);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [code, setCode] = useState("// Tu código aquí\n");
   const [testResults, setTestResults] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const popupRef = useRef(null);
 
@@ -23,16 +24,16 @@ export default function SolveTrick() {
   useEffect(() => {
     const cargarTruco = async () => {
       try {
-        const trucoData = await trucosService.getTrucoById(id);
-        setTruco(trucoData);
-
-        // Si es tipo terrorífico, cargar los test cases
-        if (trucoData.tipo_truco === "terrorifico") {
-          const testData = await trucosService.getTestCases(id);
-          // Aquí podrías guardar los test cases en un estado si los necesitas
-        }
+        setLoading(true);
+        // Usar el query parameter para obtener un truco específico
+        const response = await trucosService.getAllTrucos({ id });
+        console.log("Truco recibido:", response); // Para debugging
+        setTruco(response);
       } catch (err) {
+        console.error("Error al cargar el truco:", err);
         setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -97,8 +98,9 @@ export default function SolveTrick() {
     }
   };
 
+  if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error: {error}</div>;
-  if (!truco) return <div>Cargando...</div>;
+  if (!truco) return <div>No se encontró el truco</div>;
 
   return (
     <div className="bg-customDarkPurple text-white min-h-screen">
@@ -107,9 +109,9 @@ export default function SolveTrick() {
         <div className="flex justify-around w-full bg-customePurple p-4">
           <div className="w-1/2">
             <h1 className="text-super font-creepster mb-6">
-              {truco.titulo_truco}
+              {truco.titulo || "¿Podrás completar el truco?"}
             </h1>
-            <p className="text-title3 mb-8">{truco.descripcion_truco}</p>
+            <p className="text-title3 mb-8">{truco.descripcion}</p>
           </div>
           <div
             className={`w-1/2 relative h-64 overflow-hidden cursor-pointer ${
@@ -119,11 +121,13 @@ export default function SolveTrick() {
           >
             <div className="flex flex-col space-y-4">
               <div className="rain-button bg-customDarkOrange px-6 py-2 shadow-lg rounded font-michroma text-title2">
-                {truco.lenguaje_id}{" "}
-                {/* Aquí deberías mostrar el nombre del lenguaje */}
+                {truco.lenguaje_id || "JS"}
               </div>
               <div className="rain-button bg-customDarkOrange px-6 py-2 shadow-lg rounded font-michroma text-title2">
-                {truco.tipo_truco.toUpperCase()}
+                {truco.dificultad || "Dificultad"}
+              </div>
+              <div className="rain-button bg-customDarkOrange px-6 py-2 shadow-lg rounded font-michroma text-title2">
+                Categoría
               </div>
               <button
                 onClick={showPopup}
