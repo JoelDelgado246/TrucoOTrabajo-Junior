@@ -1,9 +1,9 @@
 export default function Footer (){
   return (
-    <footer className="bg-customOrange py-3">
+    <footer className="bg-customOrange py-10">
         <div className="max-w-7xl mx-auto lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 text-white">
-                {/* Columna 1 */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 text-white text-center lg:text-left">
+
                 <div className="lg:col-span-2">
                     <h2 className="text-title1 font-creepster text-black">¿TE ATREVES A PARTICIPAR?</h2>
                     <p className="text-normal font-michroma mt-2 text-black">
@@ -15,9 +15,9 @@ export default function Footer (){
 
                     </p>
                 </div>
-                <div className="lg:col-span-2 flex justify-end space-x-16 pr-16">
-                {/* Columna 2 */}
-                <div className="pr-12">
+                
+                <div className="flex flex-col md:flex-row gap-12 items-center lg:items-start">
+                <div>
                     <h3 className="text-title1 font-creepster text-black">TRUCOS</h3>
                     <ul className="text-normal font-michroma mt-2 space-y-2 text-black">
                         <li>Estructuras básicas</li>
@@ -25,7 +25,7 @@ export default function Footer (){
                         <li>Lógica básica</li>
                     </ul>
                 </div>
-                {/* Columna 3 */}
+
                 <div>
                     <h3 className="text-title1  font-creepster text-black">TRATOS</h3>
                     <ul className="text-normal font-michroma mt-2 space-y-2 text-black">

@@ -1,17 +1,20 @@
 import React from 'react';
 
-export default function RecentTrickSection() {
+export default function RecentTrickSection({ trato }) {
+  if (!trato) {
+
+    return <p className="text-center text-customDarkOrange font-michroma text-title1">No tienes ningún trato el día de hoy</p>;
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-customPurple px-4 rounded-lg relative">
       <div className="bg-customOrange p-4 rounded-lg text-black relative">
-        <h3 className="text-title1 font-creepster">TÍTULO</h3>
+        <h3 className="text-title1 font-creepster">{trato.titulo}</h3>
         <p className="mt-2 text-michroma text-title3 h-32 overflow-y-auto">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequatur dolores nostrum illum, mollitia sint nemo earum eaque hic suscipit nesciunt facilis reiciendis, praesentium dolorum doloremque totam, provident tempora sit? 
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quo modi eligendi inventore consequuntur nisi itaque. Accusantium quam laudantium accusamus eum, nesciunt cumque, nulla vero quos odit saepe earum numquam.
+          {trato.contenido}
         </p>
         <div className="flex items-center mt-auto pt-2 justify-between">
-          <span className="bg-customPurple text-white font-michroma text-normal py-2 px-10 rounded-full">JavaScript</span>
+          <span className="bg-customPurple text-white font-michroma text-normal py-2 px-10 rounded-full">{trato.categoria || 'General'}</span>
           <div className="flex mr-10">
             <span className="text-customGreen text-title1">★</span>
             <span className="text-customGreen text-title1">★</span>
@@ -22,7 +25,6 @@ export default function RecentTrickSection() {
         </div>
       </div>
 
-      {/* Área de comentarios */}
       <div className="px-12 rounded-lg">
         <div className="flex items-center mb-2">
           <span className="text-title2 font-michroma">💬</span>

@@ -1,4 +1,3 @@
-// src/components/challenges/CodeEditor.jsx
 import Editor from "@monaco-editor/react";
 
 const LANGUAGE_CONFIG = {

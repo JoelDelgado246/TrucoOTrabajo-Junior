@@ -1,83 +1,92 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
 import pumpkinLogo from "../../imgs/pumpkinLogo.png";
 
 export default function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   return (
-    <header className="bg-customOrange">
-      <div className="container mx-auto flex justify-between items-center px-6">
-        {/* Logo */}
-        <div className="flex items-center gap-20">
-          <Link to="/">
-            <img
-              src={pumpkinLogo}
-              alt="Logo de calabaza"
-              className="w-20 h-20"
-            />
-          </Link>
+    <header className="bg-customOrange relative">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link to="/">
+          <img src={pumpkinLogo} alt="Logo de calabaza" className="w-20 h-20"/>
+        </Link>
 
-          <nav className="flex gap-16">
-            <Link
-              to="/comunidad"
-              className="font-creepster text-[21px] text-black hover:text-customPurple"
-            >
-              COMUNIDAD
-            </Link>
+        <button onClick={toggleMenu} className="text-black text-3xl lg:hidden">
+          <FaBars />
+        </button>
+
+        <div
+          className={`fixed top-0 left-0 h-full w-64 bg-customPurple text-white transform ${
+            menuOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-transform duration-300 ease-in-out z-40`}
+        >
+          <button onClick={toggleMenu} className="text-white text-3xl absolute top-4 right-4">
+            <FaTimes />
+          </button>
+
+          <nav className="flex flex-col items-start p-8 space-y-4">
             <Link
               to="/trucos"
-              className={`font-creepster text-[21px] ${
-                location.pathname === "/trucos"
-                  ? "text-customPurple"
-                  : "text-black"
-              } hover:text-customPurple`}
+              className="text-2xl font-creepster hover:text-customOrange transition-colors duration-200"
+              onClick={toggleMenu}
             >
               TRUCOS
             </Link>
             <Link
               to="/tratos"
-              className={`font-creepster text-[21px] ${
-                location.pathname === "/tratos"
-                  ? "text-customPurple"
-                  : "text-black"
-              } hover:text-customPurple`}
+              className="text-2xl font-creepster hover:text-customOrange transition-colors duration-200"
+              onClick={toggleMenu}
             >
               TRATOS
             </Link>
             <Link
               to="/solve-trick"
-              className="font-creepster text-[21px] text-black hover:text-customPurple"
+              className="text-2xl font-creepster hover:text-customOrange transition-colors duration-200"
+              onClick={toggleMenu}
             >
-              Truco resuelto
+              Truco Resuelto
             </Link>
           </nav>
         </div>
 
-        {/* Dependiendo del estado */}
-        <div className="flex items-center gap-4">
-          {isLoggedIn ? (
-            <Link to="/perfil">
-              <FaUserCircle className="text-black text-4xl" />
-            </Link>
-          ) : (
-            <>
-              <Link
-                to="/registro"
-                className="font-creepster text-[21px] text-black rounded-full px-6 py-1 border-2 border-customGreen hover:bg-customGreen"
-              >
-                REGISTRARSE
-              </Link>
-              <Link
-                to="/login"
-                className="font-creepster text-[21px] text-white bg-customPurple rounded-full px-6 py-1 hover:bg-purple-950"
-              >
-                INICIAR SESIÓN
-              </Link>
-            </>
-          )}
+        <nav className="hidden lg:flex lg:items-center lg:gap-16 text-center lg:text-left">
+          <Link
+            to="/trucos"
+            className="font-creepster text-[21px] text-black hover:text-customPurple transition-colors duration-200"
+          >
+            TRUCOS
+          </Link>
+          <Link
+            to="/tratos"
+            className="font-creepster text-[21px] text-black hover:text-customPurple transition-colors duration-200"
+          >
+            TRATOS
+          </Link>
+          <Link
+            to="/solve-trick"
+            className="font-creepster text-[21px] text-black hover:text-customPurple transition-colors duration-200"
+          >
+            Truco Resuelto
+          </Link>
+        </nav>
+
+        <div className="hidden lg:flex items-center">
+          <Link to="/">
+            <FaUserCircle className="text-black text-4xl" />
+          </Link>
         </div>
+
+        {menuOpen && (
+          <div className="flex lg:hidden items-center justify-center mt-4">
+
+          </div>
+        )}
       </div>
     </header>
   );
