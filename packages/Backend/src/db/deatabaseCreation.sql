@@ -53,9 +53,16 @@ CREATE TABLE IF NOT EXISTS Comentario (
     fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (truco_id) REFERENCES Truco(truco_id) ON DELETE CASCADE
 );
-DROP TABLE IF EXISTS Comentario;
-DROP TABLE IF EXISTS Trato;
-DROP TABLE IF EXISTS Test;
-DROP TABLE IF EXISTS Opcion_Respuesta;
-DROP TABLE IF EXISTS Truco;
-DROP TABLE IF EXISTS Lenguaje;
+CREATE TABLE IF NOT EXISTS PreguntaImagen (
+    pregunta_id INT PRIMARY KEY AUTO_INCREMENT,
+    truco_id INT NOT NULL,
+    url_imagen VARCHAR(255) NOT NULL,
+    espacio_completar VARCHAR(100) NOT NULL,
+    FOREIGN KEY (truco_id) REFERENCES Truco(truco_id)
+);
+-- DROP TABLE IF EXISTS Comentario;
+-- DROP TABLE IF EXISTS Trato;
+-- DROP TABLE IF EXISTS Test;
+-- DROP TABLE IF EXISTS Opcion_Respuesta;
+-- DROP TABLE IF EXISTS Truco;
+-- DROP TABLE IF EXISTS Lenguaje;

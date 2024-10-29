@@ -1,12 +1,11 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import CodeEditor from "../components/trucos/CodeEditor";
 import Header from "../components/layout/Header";
 import TestResults from "../components/trucos/TestResults";
 import MultipleChoice from "../components/trucos/MultipleChoice";
 import { trucosService } from "../services/trucosService";
+import ImageQuestion from "../components/trucos/ImageQuestion";
 import "../css/SolveTrick.css";
-import { executeCode, getCodeTemplate } from "../services/judge0Service";
 
 export default function SolveTrick() {
   const { id } = useParams(); // Para obtener el ID del truco de la URL
@@ -15,9 +14,7 @@ export default function SolveTrick() {
   const [rating, setRating] = useState(0);
   const [isAnimationPlaying, setIsAnimationPlaying] = useState(true);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [code, setCode] = useState("// Tu código aquí\n");
   const [testResults, setTestResults] = useState(null);
-  const [isRunning, setIsRunning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showTrato, setShowTrato] = useState(false);
   const [error, setError] = useState(null);
@@ -48,13 +45,6 @@ export default function SolveTrick() {
       cargarTruco();
     }
   }, [id]);
-
-  // Inicializar el código con la plantilla
-  useEffect(() => {
-    if (truco && truco.dificultad === "terrorifico") {
-      setCode(getCodeTemplate(truco.id));
-    }
-  }, [truco]);
 
   const toggleAnimation = (event) => {
     event.stopPropagation();
@@ -88,39 +78,6 @@ export default function SolveTrick() {
       },
       { once: true }
     );
-  };
-
-  // Actualizar handleRunTests
-  // En SolveTrick.jsx
-  const handleRunTests = async () => {
-    setIsRunning(true);
-    try {
-      // Como el truco ya viene con sus test cases, los usamos directamente
-      const response = await trucosService.submitSolution(truco.id, code);
-
-      setTestResults({
-        passed: response.success,
-        results: response.results,
-        message: response.message,
-      });
-
-      if (response.success) {
-        handleSuccess(response);
-      }
-    } catch (error) {
-      console.error("Error al ejecutar los tests:", error);
-      setTestResults({
-        passed: false,
-        results: [
-          {
-            passed: false,
-            error: error.message,
-          },
-        ],
-      });
-    } finally {
-      setIsRunning(false);
-    }
   };
 
   // Función para manejar la puntuación
@@ -157,6 +114,38 @@ export default function SolveTrick() {
           localStorage.setItem(`truco_completado_${id}`, "true");
           setShowTrato(true);
         }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setTestResults({
+        passed: false,
+        message: "Error al verificar la respuesta",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleImageAnswer = async (answer) => {
+    if (!answer) return;
+
+    setIsLoading(true);
+    try {
+      // Verificar si la respuesta coincide con espacio_completar
+      const isCorrect =
+        answer.trim().toLowerCase() ===
+        truco.preguntaImagen.respuestaCorrecta.toLowerCase();
+
+      setTestResults({
+        passed: isCorrect,
+        message: isCorrect
+          ? "¡Correcto! Has completado el código correctamente."
+          : "Incorrecto. Intenta de nuevo.",
+      });
+
+      if (isCorrect) {
+        localStorage.setItem(`truco_completado_${id}`, "true");
+        setShowTrato(true);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -279,60 +268,27 @@ export default function SolveTrick() {
             <h2 className="text-title2 font-michroma mb-4">Tu respuesta</h2>
 
             {truco.dificultad === "terrorifico" ? (
-              // Para trucos terroríficos (con editor de código)
-              <>
-                <CodeEditor
-                  language="javascript" // Siempre será JavaScript
-                  code={code}
-                  onChange={setCode}
-                  trucoId={truco?.id} // Pasar el ID del truco
-                />
-                {testResults && (
-                  <div className="mt-4">
-                    <h3 className="font-bold mb-2">Resultados:</h3>
-                    {testResults.results?.map((result, index) => (
-                      <div
-                        key={index}
-                        className={`p-4 rounded mb-2 ${
-                          result.passed ? "bg-green-100" : "bg-red-100"
-                        }`}
-                      >
-                        <p>Test {index + 1}:</p>
-                        <p>Input: {result.input}</p>
-                        <p>Expected: {result.expected}</p>
-                        <p>Got: {result.got}</p>
-                        {result.error && (
-                          <p className="text-red-500">Error: {result.error}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <button
-                  onClick={handleRunTests}
-                  disabled={isRunning}
-                  className="bg-customGreen px-6 py-2 rounded font-michroma text-title2"
-                >
-                  {isRunning ? "Ejecutando..." : "Ejecutar Código"}
-                </button>
-              </>
+              // Para trucos terroríficos (preguntas con imagen)
+              <ImageQuestion
+                imageUrl={truco.preguntaImagen?.url}
+                onSubmit={handleImageAnswer}
+              />
             ) : (
               // Para trucos fáciles e intermedios (opción múltiple)
-              <>
-                <MultipleChoice
-                  opciones={truco.opciones}
-                  onSubmit={handleSubmitAnswer}
-                />
-                {testResults && (
-                  <div
-                    className={`mt-4 p-4 rounded ${
-                      testResults.passed ? "bg-green-100" : "bg-red-100"
-                    }`}
-                  >
-                    <p>{testResults.message}</p>
-                  </div>
-                )}
-              </>
+              <MultipleChoice
+                opciones={truco.opciones}
+                onSubmit={handleSubmitAnswer}
+              />
+            )}
+
+            {testResults && (
+              <div
+                className={`mt-4 p-4 rounded ${
+                  testResults.passed ? "bg-green-100" : "bg-red-100"
+                }`}
+              >
+                <p>{testResults.message}</p>
+              </div>
             )}
           </div>
         </div>
