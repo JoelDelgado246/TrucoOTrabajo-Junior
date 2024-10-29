@@ -180,7 +180,11 @@ export default function SolveTrick() {
                 </span>
               )}
             </div>
-            <p className="text-title3 mb-8">{truco?.descripcion}</p>
+            {/* Descripción */}
+            <div className="mb-6">
+              <h3 className="font-bold text-lg mb-2">Descripción:</h3>
+              <p>{truco?.descripcion}</p>
+            </div>
           </div>
 
           <div
@@ -211,22 +215,16 @@ export default function SolveTrick() {
 
         <div className="flex gap-6 mt-8">
           {/* Challenge Area */}
-          {/* Challenge Area */}
           <div className="flex-1 bg-white text-black p-6 rounded flex flex-col justify-between">
             <div>
-              <h2 className="text-title2 font-michroma mb-4">
-                Descripción del Reto
-              </h2>
               <div className="w-full h-72 border-2 border-gray-300 rounded mb-4 overflow-y-auto p-4">
-                <div className="mb-4">
-                  <h3 className="font-bold text-lg mb-2">Descripción:</h3>
-                  <p>{truco?.descripcion_truco}</p>
-                </div>
-
-                <div className="mb-4">
-                  <h3 className="font-bold text-lg mb-2">Instrucciones:</h3>
-                  <p>{truco?.intrucciones_truco}</p>
-                </div>
+                {/* Instrucciones */}
+                {truco?.instrucciones && (
+                  <div className="mb-6">
+                    <h3 className="font-bold text-lg mb-2">Instrucciones:</h3>
+                    <p>{truco.instrucciones}</p>
+                  </div>
+                )}
               </div>
             </div>
 
