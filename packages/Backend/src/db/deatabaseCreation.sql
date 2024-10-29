@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS Trato (
     trato_id INT PRIMARY KEY AUTO_INCREMENT,
     truco_id INT NOT NULL,
     titulo_trato VARCHAR(40) NOT NULL,
-    url_imagen VARCHAR(70) NOT NULL,
+    url_imagen VARCHAR(70),
     texto_contenido TEXT,
     enlace_tutorial VARCHAR(100),
     enlace_curso VARCHAR(100),
@@ -57,5 +57,5 @@ CREATE TABLE IF NOT EXISTS Comentario (
     truco_id INT NOT NULL,
     contenido TEXT NOT NULL,
     fecha_comentario TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (truco_id) REFERENCES Truco(truco_id) ON DELETE CASCADE,
+    FOREIGN KEY (truco_id) REFERENCES Truco(truco_id) ON DELETE CASCADE
 );
