@@ -1,5 +1,4 @@
 import { pool } from '../db/db.js';
-import { executeCode } from '../services/judge0Services.js';
 
 
 // Obtener lista de trucos con filtros y mapeo de resultados
@@ -7,14 +6,28 @@ export const getTrucos = async (req, res) => {
   const { id, dificultad } = req.query;
 
   try {
-    let query = 'SELECT * FROM Truco';
+    let query = `
+      SELECT 
+        t.truco_id,
+        t.titulo_truco,
+        t.descripcion_truco,
+        t.tipo_truco,
+        t.intrucciones_truco,
+        t.url_imagen,
+        l.nombre_lenguaje,
+        pi.url_imagen as imagen_pregunta,
+        pi.espacio_completar
+      FROM Truco t 
+      JOIN Lenguaje l ON t.lenguaje_id = l.lenguaje_id
+      LEFT JOIN PreguntaImagen pi ON t.truco_id = pi.truco_id
+    `;
     const params = [];
 
     if (id) {
-      query += ' WHERE truco_id = ?';
+      query += ' WHERE t.truco_id = ?';
       params.push(id);
     } else if (dificultad) {
-      query += ' WHERE tipo_truco = ?';
+      query += ' WHERE t.tipo_truco = ?';
       params.push(dificultad);
     }
 
@@ -49,17 +62,23 @@ export const getTrucos = async (req, res) => {
       return acc;
     }, {});
 
-    // Mapear los datos para devolver solo la información relevante de trucos y sus opciones
+    // Mapear los datos
     const trucosMapeados = trucos.map(truco => ({
       id: truco.truco_id,
       titulo: truco.titulo_truco,
       descripcion: truco.descripcion_truco,
       dificultad: truco.tipo_truco,
       imagen: truco.url_imagen,
-      opciones: opcionesPorTruco[truco.truco_id] || [], // Agregar opciones de respuesta al truco
+      instrucciones: truco.intrucciones_truco,
+      preguntaImagen: truco.imagen_pregunta ? {
+        url: truco.imagen_pregunta,
+        respuestaCorrecta: truco.espacio_completar
+      } : null,
+      opciones: opcionesPorTruco[truco.truco_id] || []
     }));
 
     res.json(id ? trucosMapeados[0] : trucosMapeados);
+    // res.json(id ? trucos[0] : trucos);
   } catch (error) {
     res.status(500).json({ message: "Error al obtener los trucos", error });
   }
@@ -67,87 +86,7 @@ export const getTrucos = async (req, res) => {
 
 
 
-// Subir solución para un reto específico
-export const submitSolution = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { code } = req.body;
 
-    if (!code) {
-      return res.status(400).json({
-        message: 'El código es requerido'
-      });
-    }
-
-    // Obtener el truco y sus test cases
-    const [rows] = await pool.query(`
-      SELECT t.*, l.nombre_lenguaje 
-      FROM Truco t
-      JOIN Lenguaje l ON t.lenguaje_id = l.lenguaje_id
-      WHERE t.truco_id = ?
-    `, [id]);
-
-    const truco = rows[0];
-    if (!truco) {
-      return res.status(404).json({
-        message: 'Truco no encontrado'
-      });
-    }
-
-    const [testCases] = await pool.query('SELECT * FROM Test WHERE truco_id = ?', [id]);
-
-    if (!testCases || testCases.length === 0) {
-      return res.status(404).json({
-        message: 'No se encontraron test cases para este truco'
-      });
-    }
-
-    // Ejecutar cada test case usando Judge0
-    const results = [];
-    for (const test of testCases) {
-      const testData = typeof test.test_json === 'string'
-        ? JSON.parse(test.test_json)
-        : test.test_json;
-
-      try {
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar entre tests
-        const result = await executeCode(code, truco.nombre_lenguaje, testData.input);
-
-        results.push({
-          passed: result.stdout?.trim() === testData.output.trim(),
-          input: testData.input,
-          expected: testData.output,
-          got: result.stdout,
-          error: result.stderr || null
-        });
-      } catch (error) {
-        results.push({
-          passed: false,
-          input: testData.input,
-          expected: testData.output,
-          got: null,
-          error: error.message
-        });
-      }
-    }
-
-    // Verificar si todos los test cases pasaron
-    const allPassed = results.every(r => r.passed);
-
-    res.json({
-      success: allPassed,
-      results,
-      message: allPassed ? '¡Todos los tests pasaron!' : 'Algunos tests fallaron'
-    });
-
-  } catch (error) {
-    console.error('Error detallado:', error);
-    res.status(500).json({
-      message: error.message,
-      detail: error.toString()
-    });
-  }
-};
 
 
 
@@ -208,17 +147,5 @@ export const postComment = async (req, res) => {
   }
 };
 
-export const getTestCases = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const [tests] = await pool.query(
-      'SELECT * FROM Test WHERE truco_id = ?',
-      [id]
-    );
-    res.json(tests);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
 

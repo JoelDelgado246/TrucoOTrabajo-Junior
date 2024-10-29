@@ -178,3 +178,13 @@ INSERT INTO Comentario (truco_id, contenido) VALUES
 (28, 'Aprender a evitar el callback hell fue fundamental para simplificar mi código.'),
 (29, 'El currying me parece una técnica poderosa para funciones en JS.'),
 (30, 'La memoización optimizó el rendimiento en cálculos repetitivos.');
+
+INSERT INTO Truco (lenguaje_id, titulo_truco, descripcion_truco, tipo_truco, intrucciones_truco) VALUES
+(1, 'Completar Promesa', 'Completa la cadena de promesas', 'terrorifico', 'Completa el espacio en blanco para encadenar correctamente las promesas.'),
+(1, 'Evento DOM', 'Añadir elemento al DOM', 'terrorifico', 'Completa el código para agregar correctamente el elemento al DOM.'),
+(1, 'Async/Await Flow', 'Completar flujo asíncrono', 'terrorifico', 'Agrega la palabra clave faltante para manejar la asincronía.');
+
+INSERT INTO PreguntaImagen (truco_id, url_imagen, espacio_completar) VALUES
+(31, '/images/promise_chain.png', '.then'),
+(32, '/images/dom_append.png', 'appendChild'),
+(33, '/images/async_flow.png', 'await');

@@ -1,9 +1,10 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import CodeEditor from "../components/trucos/CodeEditor";
 import Header from "../components/layout/Header";
 import TestResults from "../components/trucos/TestResults";
+import MultipleChoice from "../components/trucos/MultipleChoice";
 import { trucosService } from "../services/trucosService";
+import ImageQuestion from "../components/trucos/ImageQuestion";
 import "../css/SolveTrick.css";
 
 export default function SolveTrick() {
@@ -13,12 +14,15 @@ export default function SolveTrick() {
   const [rating, setRating] = useState(0);
   const [isAnimationPlaying, setIsAnimationPlaying] = useState(true);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [code, setCode] = useState("// Tu código aquí\n");
   const [testResults, setTestResults] = useState(null);
-  const [isRunning, setIsRunning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showTrato, setShowTrato] = useState(false);
   const [error, setError] = useState(null);
   const popupRef = useRef(null);
+  // Añadir al principio del componente
+  const [tratoGuardado, setTratoGuardado] = useState(
+    localStorage.getItem(`trato_${id}`) || null
+  );
 
   // Cargar datos del truco
   useEffect(() => {
@@ -41,10 +45,6 @@ export default function SolveTrick() {
       cargarTruco();
     }
   }, [id]);
-
-  const handleRating = (rate) => {
-    setRating(rate);
-  };
 
   const toggleAnimation = (event) => {
     event.stopPropagation();
@@ -79,22 +79,99 @@ export default function SolveTrick() {
       { once: true }
     );
   };
-  const handleRunTests = async () => {
-    setIsRunning(true);
+
+  // Función para manejar la puntuación
+  const handleRating = async (rate) => {
+    setRating(rate);
     try {
-      const response = await trucosService.submitSolution(id, code);
-      setTestResults({
-        passed: response.success,
-        results: response.results,
-        message: response.message,
-      });
+      // Aquí puedes agregar la llamada al backend para guardar la puntuación
+      await trucosService.guardarPuntuacion(id, rate);
     } catch (error) {
+      console.error("Error al guardar puntuación:", error);
+    }
+  };
+
+  const handleSubmitAnswer = async (opcionId) => {
+    if (!opcionId) return;
+
+    setIsLoading(true);
+    try {
+      // Buscar la opción seleccionada en las opciones del truco
+      const opcionSeleccionada = truco.opciones.find(
+        (opcion) => opcion.id === opcionId
+      );
+
+      if (opcionSeleccionada) {
+        setTestResults({
+          passed: opcionSeleccionada.esCorrecto,
+          message: opcionSeleccionada.esCorrecto
+            ? "¡Respuesta correcta!"
+            : "Respuesta incorrecta. ¡Inténtalo de nuevo!",
+        });
+
+        if (opcionSeleccionada.esCorrecto) {
+          // Guardar en localStorage que el truco fue completado
+          localStorage.setItem(`truco_completado_${id}`, "true");
+          setShowTrato(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
       setTestResults({
         passed: false,
-        error: error.message,
+        message: "Error al verificar la respuesta",
       });
     } finally {
-      setIsRunning(false);
+      setIsLoading(false);
+    }
+  };
+
+  const handleImageAnswer = async (answer) => {
+    if (!answer) return;
+
+    setIsLoading(true);
+    try {
+      // Verificar si la respuesta coincide con espacio_completar
+      const isCorrect =
+        answer.trim().toLowerCase() ===
+        truco.preguntaImagen.respuestaCorrecta.toLowerCase();
+
+      setTestResults({
+        passed: isCorrect,
+        message: isCorrect
+          ? "¡Correcto! Has completado el código correctamente."
+          : "Incorrecto. Intenta de nuevo.",
+      });
+
+      if (isCorrect) {
+        localStorage.setItem(`truco_completado_${id}`, "true");
+        setShowTrato(true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setTestResults({
+        passed: false,
+        message: "Error al verificar la respuesta",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Modificar la función que maneja el éxito de la solución
+  const handleSuccess = (result) => {
+    setTestResults(result);
+    if (result.success) {
+      // Guardar el trato en localStorage
+      localStorage.setItem(
+        `trato_${id}`,
+        JSON.stringify({
+          tratoId: truco.trato?.trato_id,
+          completadoEn: new Date().toISOString(),
+        })
+      );
+      setTratoGuardado(true);
+      setShowTrato(true);
     }
   };
 
@@ -108,11 +185,23 @@ export default function SolveTrick() {
       <main className="container mx-auto">
         <div className="flex justify-around w-full bg-customePurple p-4">
           <div className="w-1/2">
-            <h1 className="text-super font-creepster mb-6">
-              {truco.titulo || "¿Podrás completar el truco?"}
-            </h1>
-            <p className="text-title3 mb-8">{truco.descripcion}</p>
+            <div className="flex items-center gap-4">
+              <h1 className="text-super font-creepster mb-6">
+                {truco?.titulo}
+              </h1>
+              {tratoGuardado && (
+                <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm">
+                  Completado
+                </span>
+              )}
+            </div>
+            {/* Descripción */}
+            <div className="mb-6">
+              <h3 className="font-bold text-lg mb-2">Descripción:</h3>
+              <p>{truco?.descripcion}</p>
+            </div>
           </div>
+
           <div
             className={`w-1/2 relative h-64 overflow-hidden cursor-pointer ${
               isAnimationPlaying ? "" : "paused"
@@ -143,20 +232,18 @@ export default function SolveTrick() {
           {/* Challenge Area */}
           <div className="flex-1 bg-white text-black p-6 rounded flex flex-col justify-between">
             <div>
-              <h2 className="text-title2 font-michroma mb-4">
-                Descripción del Reto
-              </h2>
               <div className="w-full h-72 border-2 border-gray-300 rounded mb-4 overflow-y-auto p-4">
-                {/* Aquí va la descripción del reto y ejemplos */}
-                <p className="mb-4">Implementa una función que...</p>
-                <div className="bg-gray-100 p-4 rounded">
-                  <h3 className="font-bold mb-2">Ejemplo:</h3>
-                  <pre className="bg-gray-800 text-white p-2 rounded">
-                    {`Input: [1, 2]\nExpected Output: 3`}
-                  </pre>
-                </div>
+                {/* Instrucciones */}
+                {truco?.instrucciones && (
+                  <div className="mb-6">
+                    <h3 className="font-bold text-lg mb-2">Instrucciones:</h3>
+                    <p>{truco.instrucciones}</p>
+                  </div>
+                )}
               </div>
             </div>
+
+            {/* Sistema de puntuación */}
             <div>
               <div className="text-normal">Puntúa el ejercicio:</div>
               <div className="flex gap-2 mt-2">
@@ -176,44 +263,66 @@ export default function SolveTrick() {
           </div>
 
           {/* Response Area */}
+
           <div className="flex-1 bg-white text-black p-6 rounded">
             <h2 className="text-title2 font-michroma mb-4">Tu respuesta</h2>
-            <CodeEditor
-              language={truco.nombre_lenguaje}
-              code={code}
-              onChange={setCode}
-            />
+
+            {truco.dificultad === "terrorifico" ? (
+              // Para trucos terroríficos (preguntas con imagen)
+              <ImageQuestion
+                imageUrl={truco.preguntaImagen?.url}
+                onSubmit={handleImageAnswer}
+              />
+            ) : (
+              // Para trucos fáciles e intermedios (opción múltiple)
+              <MultipleChoice
+                opciones={truco.opciones}
+                onSubmit={handleSubmitAnswer}
+              />
+            )}
+
             {testResults && (
-              <div className="mt-4">
-                <h3 className="font-bold mb-2">Resultados:</h3>
-                {testResults.results?.map((result, index) => (
-                  <div
-                    key={index}
-                    className={`p-4 rounded mb-2 ${
-                      result.passed ? "bg-green-100" : "bg-red-100"
-                    }`}
-                  >
-                    <p>Test {index + 1}:</p>
-                    <p>Input: {result.input}</p>
-                    <p>Expected: {result.expected}</p>
-                    <p>Got: {result.got}</p>
-                    {result.error && (
-                      <p className="text-red-500">Error: {result.error}</p>
-                    )}
-                  </div>
-                ))}
+              <div
+                className={`mt-4 p-4 rounded ${
+                  testResults.passed ? "bg-green-100" : "bg-red-100"
+                }`}
+              >
+                <p>{testResults.message}</p>
               </div>
             )}
-            <button
-              onClick={handleRunTests}
-              disabled={isRunning}
-              className="bg-customGreen px-6 py-2 rounded font-michroma text-title2"
-            >
-              {isRunning ? "Ejecutando..." : "Ejecutar Código"}
-            </button>
           </div>
         </div>
       </main>
+
+      {/* Modal de Trato */}
+      {showTrato && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg max-w-md text-black">
+            <h3 className="text-xl font-bold mb-4">¡Felicitaciones!</h3>
+            <p className="mb-4">Has completado el reto exitosamente.</p>
+
+            {/* Link provisional o mensaje */}
+            <p className="mb-4">
+              Tu recompensa está esperando en la sección de tratos.
+            </p>
+
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowTrato(false)}
+                className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+              >
+                Cerrar
+              </button>
+              <Link
+                to="/tratos"
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+              >
+                Ver Recompensa
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isPopupVisible && (
         <div
