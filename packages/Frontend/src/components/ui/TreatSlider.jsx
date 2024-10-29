@@ -1,15 +1,6 @@
 import { useState, useEffect } from "react";
-import pumpkinEasy from "../../imgs/pumpkinEasy.png";
-import pumpkinMedium from "../../imgs/pumpkinMedium.png";
-import pumpkinHard from "../../imgs/pumpkinHard.png";
 
-const difficultyIcons = {
-  facil: pumpkinEasy,
-  intermedio: pumpkinMedium,
-  terrorifico: pumpkinHard,
-};
-
-export default function Slider({ items }) {
+export default function TratoSlider({ items }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -36,29 +27,25 @@ export default function Slider({ items }) {
 
   return (
     <div
-      className="relative bg-customDarkPurple p-8 rounded-[50px] mx-8"
+      className="relative bg-customDarkPurple p-8 rounded-[50px] mx-8 overflow-hidden"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <div
-        className="flex gap-8 overflow-hidden"
+        className="flex gap-8 transition-transform duration-500 ease-in-out"
+        style={{
+          transform: `translateX(-${currentIndex * (250 + 32)}px)`,
+          width: `${items.length * 100}%`,
+        }}
       >
         {items.map((item, index) => (
           <div
             key={index}
-            className="min-w-[250px] h-[250px] bg-customOrange rounded-lg transition-transform duration-500 transform hover:scale-105"
-            style={{
-              transform: `translateX(-${currentIndex * (250 + 32)}px)`, // 32px es el gap (gap-8)
-            }}
+            className="flex-shrink-0 w-[250px] h-[250px] bg-customOrange rounded-lg transition-transform duration-500 transform hover:scale-105"
           >
-            <div className="p-4 flex flex-col justify-between h-full">
+            <div className="p-4 flex flex-col justify-center items-center h-full">
               <h3 className="text-title2 font-creepster mb-2 text-center">{item.titulo}</h3>
-              <p className="text-normal font-michroma mb-4">{item.descripcion}</p>
-              <img
-                src={difficultyIcons[item.dificultad]}
-                alt={item.dificultad}
-                className="w-10 h-10 mx-auto mt-4"
-              />
+              <p className="text-normal font-michroma mb-4 text-center">{item.contenido}</p>
             </div>
           </div>
         ))}
