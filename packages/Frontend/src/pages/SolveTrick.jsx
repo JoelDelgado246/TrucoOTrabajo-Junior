@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import CodeEditor from "../components/trucos/CodeEditor";
 import Header from "../components/layout/Header";
 import TestResults from "../components/trucos/TestResults";
+import MultipleChoice from "../components/trucos/MultipleChoice";
 import { trucosService } from "../services/trucosService";
 import "../css/SolveTrick.css";
 
@@ -17,6 +18,7 @@ export default function SolveTrick() {
   const [testResults, setTestResults] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showTrato, setShowTrato] = useState(false);
   const [error, setError] = useState(null);
   const popupRef = useRef(null);
 
@@ -95,6 +97,21 @@ export default function SolveTrick() {
       });
     } finally {
       setIsRunning(false);
+    }
+  };
+
+  const handleRunCode = async () => {
+    setIsLoading(true);
+    try {
+      const result = await trucosService.submitSolution(id, code);
+      setTestResults(result);
+      if (result.success) {
+        setShowTrato(true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
