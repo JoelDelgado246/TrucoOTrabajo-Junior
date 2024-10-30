@@ -11,7 +11,7 @@ dotenv.config(); // Cargar variables de entorno
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173' // Puerto donde corre tu frontend
+  origin: 'https://auj-truco-trato.netlify.app'
 }));
 
 // Middleware para procesar JSON
