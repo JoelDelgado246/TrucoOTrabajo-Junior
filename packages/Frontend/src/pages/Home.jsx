@@ -21,7 +21,7 @@ export default function Home() {
     const fetchTrucos = async () => {
       try {
         const data = await trucosService.getAllTrucos();
-        const randomItems = getRandomItems(data, 9);
+        const randomItems = getRandomItems(data, 12);
         setSliderItems(randomItems);
       } catch (error) {
         console.error("Error fetching trucos:", error);
@@ -31,7 +31,7 @@ export default function Home() {
     const fetchTratos = async () => {
       try {
         const data = await tratosService.getAllTratos();
-        const randomItems = getRandomItems(data, 9);
+        const randomItems = getRandomItems(data, 12);
         setTratoItems(randomItems);
       } catch (error) {
         console.error("Error fetching tratos: ", error);
