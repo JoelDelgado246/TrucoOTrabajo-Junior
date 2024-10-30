@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default function TratoSlider({ items }) {
+export default function TratoSlider({ items, sliderId = "tratos" }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -44,8 +44,12 @@ export default function TratoSlider({ items }) {
             className="flex-shrink-0 w-[250px] h-[250px] bg-customOrange rounded-lg transition-transform duration-500 transform hover:scale-105"
           >
             <div className="p-4 flex flex-col justify-center items-center h-full">
-              <h3 className="text-title2 font-creepster mb-2 text-center">{item.titulo}</h3>
-              <p className="text-normal font-michroma mb-4 text-center">{item.contenido}</p>
+              <h3 className="text-title2 font-creepster mb-2 text-center">
+                {item.titulo}
+              </h3>
+              <p className="text-normal font-michroma mb-4 text-center">
+                {item.contenido}
+              </p>
             </div>
           </div>
         ))}

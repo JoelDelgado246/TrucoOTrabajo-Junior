@@ -50,7 +50,7 @@ export default function Home() {
       <Header />
       <main className="flex-1 bg-customDarkOrange">
         <section className="py-16">
-          <Slider items={sliderItems} />
+          <Slider items={sliderItems} sliderId="trucos" />
         </section>
 
         <section className="space-y-8">
@@ -66,7 +66,7 @@ export default function Home() {
           />
         </section>
         <section className="py-16">
-          <TratoSlider items={tratoItems} />
+          <TratoSlider items={tratoItems} sliderId="tratos" />
         </section>
         <section>
           <SectionCard

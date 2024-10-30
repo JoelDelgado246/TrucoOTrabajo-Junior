@@ -9,7 +9,7 @@ const difficultyIcons = {
   terrorifico: pumpkinHard,
 };
 
-export default function Slider({ items }) {
+export default function Slider({ items, sliderId = 'trucos'  }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -21,7 +21,7 @@ export default function Slider({ items }) {
       }, 1500);
     }
     return () => clearInterval(interval);
-  }, [isAutoPlaying, currentIndex]);
+  }, [isAutoPlaying, currentIndex, sliderId]);
 
   const nextSlide2 = () => {
     setCurrentIndex((prev) => (prev + 1) % items.length);
