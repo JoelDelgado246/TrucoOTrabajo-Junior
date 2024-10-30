@@ -89,7 +89,7 @@ INSERT INTO Trato (truco_id, titulo_trato, texto_contenido, enlace_tutorial, enl
 (25, 'Curso de JAVASCRIPT desde CERO (Completo) - Nivel JUNIOR', NULL, NULL, 'https://www.youtube.com/watch?v=z95mZVUcJ-E'),
 
 INSERT INTO Truco (lenguaje_id, titulo_truco, descripcion_truco, tipo_truco, intrucciones_truco) VALUES
-(1, 'Suma de Números Pares en un Array', 'Este ejercicio enseña a trabajar con arrays y aplicar métodos como filter y reduce para sumar elementos específicos de un array.', 'terrorifico', 'Completa la palabra faltante para filtrar los números pares y luego sumarlos.'),
+(1, 'Suma de Números Pares ens un Array', 'Este ejercicio enseña a trabajar con arrays y aplicar métodos como filter y reduce para sumar elementos específicos de un array.', 'terrorifico', 'Completa la palabra faltante para filtrar los números pares y luego sumarlos.'),
 (1, 'Invertir Palabras en una Frase', ' Este ejercicio permite practicar la manipulación de cadenas y el uso de métodos de arrays para transformar una frase, invirtiendo cada palabra en su lugar', 'terrorifico', 'Completa la palabra faltante para invertir el orden de las letras en cada palabra.'),
 (1, 'Contar Ocurrencias de Caracteres', 'Este ejercicio permite trabajar con objetos y loops para contar la frecuencia de cada carácter en una cadena dada.', 'terrorifico', 'Completa la palabra faltante para verificar si el carácter ya está en el objeto ocurrencias.');
 (1, 'Filtrar Palabras Únicas de un Array', 'Este ejercicio enseña el uso de la estructura Set para eliminar duplicados en un array.', 'terrorifico', 'Completa la palabra faltante para convertir el Set en un array de palabras únicas.'),
