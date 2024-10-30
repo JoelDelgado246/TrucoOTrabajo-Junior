@@ -11,7 +11,9 @@ dotenv.config(); // Cargar variables de entorno
 const app = express();
 
 app.use(cors({
-  origin: 'https://auj-truco-trato.netlify.app'
+  origin: ['http://localhost:5173', 'https://auj-truco-trato.netlify.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 }));
 
 // Middleware para procesar JSON
@@ -28,10 +30,10 @@ app.use('/trucos', trucosRoutes);
 app.use('/tratos', tratosRoutes);
 
 app.listen(process.env.PORT, () => {
-    console.log('Servidor corriendo en', process.env.PORT);
-    console.log('db host',process.env.DB_HOST);
-    console.log('db user',process.env.DB_USER);
-    console.log('db pw',process.env.DB_PASSWORD);
-    console.log('db database',process.env.DB_NAME);
-    console.log(process.env.DB_PORT);
-  });
+  console.log('Servidor corriendo en', process.env.PORT);
+  console.log('db host', process.env.DB_HOST);
+  console.log('db user', process.env.DB_USER);
+  console.log('db pw', process.env.DB_PASSWORD);
+  console.log('db database', process.env.DB_NAME);
+  console.log(process.env.DB_PORT);
+});
