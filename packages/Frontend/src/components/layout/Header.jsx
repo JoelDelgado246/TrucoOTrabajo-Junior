@@ -14,7 +14,7 @@ export default function Header() {
     <header className="bg-customOrange relative">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/">
-          <img src={pumpkinLogo} alt="Logo de calabaza" className="w-16 h-16"/>
+          <img src={pumpkinLogo} alt="Logo de calabaza" className="w-16 h-16" />
         </Link>
 
         <button onClick={toggleMenu} className="text-black text-3xl lg:hidden">
@@ -59,6 +59,12 @@ export default function Header() {
         </div>
 
         <nav className="hidden lg:flex lg:items-center lg:gap-16 text-center lg:text-left">
+          <Link
+            to="/"
+            className="font-creepster text-[21px] text-black hover:text-customPurple transition-colors duration-200"
+          >
+            INICIO
+          </Link>
           <Link
             to="/trucos"
             className="font-creepster text-[21px] text-black hover:text-customPurple transition-colors duration-200"
