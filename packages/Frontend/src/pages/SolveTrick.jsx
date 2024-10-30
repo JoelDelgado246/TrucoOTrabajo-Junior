@@ -162,15 +162,14 @@ export default function SolveTrick() {
   const handleSuccess = (result) => {
     setTestResults(result);
     if (result.success) {
-      // Guardar el trato en localStorage
+      // Guardar el ID del truco completado en localStorage
       localStorage.setItem(
-        `trato_${id}`,
+        `truco_completado_${id}`,
         JSON.stringify({
-          tratoId: truco.trato?.trato_id,
+          trucoId: truco.id,
           completadoEn: new Date().toISOString(),
         })
       );
-      setTratoGuardado(true);
       setShowTrato(true);
     }
   };
@@ -242,24 +241,6 @@ export default function SolveTrick() {
                 )}
               </div>
             </div>
-
-            {/* Sistema de puntuación */}
-            <div>
-              <div className="text-normal">Puntúa el ejercicio:</div>
-              <div className="flex gap-2 mt-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button key={star} onClick={() => handleRating(star)}>
-                    <span
-                      className={`text-3xl ${
-                        rating >= star ? "text-customOrange" : "text-gray-400"
-                      }`}
-                    >
-                      ★
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Response Area */}
@@ -300,12 +281,6 @@ export default function SolveTrick() {
           <div className="bg-white p-6 rounded-lg max-w-md text-black">
             <h3 className="text-xl font-bold mb-4">¡Felicitaciones!</h3>
             <p className="mb-4">Has completado el reto exitosamente.</p>
-
-            {/* Link provisional o mensaje */}
-            <p className="mb-4">
-              Tu recompensa está esperando en la sección de tratos.
-            </p>
-
             <div className="flex justify-end gap-4">
               <button
                 onClick={() => setShowTrato(false)}

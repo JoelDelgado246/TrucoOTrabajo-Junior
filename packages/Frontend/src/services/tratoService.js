@@ -10,6 +10,15 @@ const tratosService = {
       throw error;
     }
   },
+
+  getTratoById: async (id) => {
+    try {
+      const response = await api.get(`/tratos/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 };
 
 export default tratosService;
