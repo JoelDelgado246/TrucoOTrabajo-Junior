@@ -97,8 +97,8 @@ INSERT INTO Truco (lenguaje_id, titulo_truco, descripcion_truco, tipo_truco, int
 
 
 INSERT INTO PreguntaImagen (truco_id, url_imagen, espacio_completar) VALUES
-(21, 'https://imgur.com/a/mhmWHMf', 'filter'),
-(22, 'https://imgur.com/a/bjuHJ6f', 'map'),
-(23, 'https://imgur.com/a/vNoTDSO', '1');
-(24, 'https://imgur.com/a/VMlfYjI', '...'),
-(25, 'https://imgur.com/a/haM2Pcf', 'propiedad'),
+(21, 'https://i.imgur.com/GKXX6yJ.png', 'filter'),
+(22, 'https://i.imgur.com/QLbCDnU.png', 'map'),
+(23, 'https://i.imgur.com/l20GICY.png', '1');
+(24, 'https://i.imgur.com/uhU5avt.png', '...'),
+(25, 'https://i.imgur.com/5IlB6aP.png', 'propiedad'),

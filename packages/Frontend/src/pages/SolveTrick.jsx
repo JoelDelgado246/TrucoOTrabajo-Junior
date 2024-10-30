@@ -126,12 +126,8 @@ export default function SolveTrick() {
             : "Respuesta incorrecta. ¡Inténtalo de nuevo!",
         });
 
-        if (opcionSeleccionada.esCorrecto) {
-          // Guardar en localStorage que el truco fue completado
-          localStorage.setItem(
-            `truco_completado_${id}`,
-            JSON.stringify({ id: truco.id, completadoEn: new Date().toISOString() })
-          );
+        if (opcionSeleccionada?.esCorrecto) {
+          saveCompletedTrick(id);
           setShowTrato(true);
         }
       }
@@ -164,7 +160,7 @@ export default function SolveTrick() {
       });
 
       if (isCorrect) {
-        localStorage.setItem(`truco_completado_${id}`, "true");
+        saveCompletedTrick(id);
         setShowTrato(true);
       }
     } catch (error) {
@@ -187,11 +183,23 @@ export default function SolveTrick() {
         `truco_completado_${id}`,
         JSON.stringify({
           trucoId: truco.id,
+          tratado_id: id, // Asegúrate que coincida con el ID en la tabla Trato
           completadoEn: new Date().toISOString(),
         })
       );
       setShowTrato(true);
     }
+  };
+
+  const saveCompletedTrick = (trucoId) => {
+    localStorage.setItem(
+      `truco_completado_${trucoId}`,
+      JSON.stringify({
+        trucoId: trucoId,
+        tratoId: truco.truco_id, // Usa el ID correcto de la relación
+        completadoEn: new Date().toISOString(),
+      })
+    );
   };
 
   if (loading) return <div>Cargando...</div>;

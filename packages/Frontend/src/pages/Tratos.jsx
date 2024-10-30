@@ -11,30 +11,40 @@ export default function Truco() {
   const [selectedTrato, setSelectedTrato] = useState(null);
 
   useEffect(() => {
+    const fetchTratosCompletados = async () => {
+      try {
+        const trucosCompletados = Object.entries(localStorage)
+          .filter(([key]) => key.startsWith("truco_completado_"))
+          .map(([key, value]) => {
+            try {
+              return JSON.parse(value);
+            } catch {
+              return null;
+            }
+          })
+          .filter(Boolean)
+          .sort((a, b) => new Date(b.completadoEn) - new Date(a.completadoEn));
 
-    const trucosCompletados = Object.keys(localStorage)
-      .filter(key => key.startsWith('truco_completado_'))
-      .map(key => JSON.parse(localStorage.getItem(key)))
-      .filter(truco => truco && truco.id);
-
-    if (trucosCompletados.length > 0) {
-      const fetchTratos = async () => {
-        try {
+        if (trucosCompletados.length > 0) {
           const responses = await Promise.all(
             trucosCompletados.map((truco) =>
-              tratoService.getTratoById(truco.id)
+              tratoService.getTratoById(truco.trucoId || truco.tratado_id)
             )
           );
-          const fetchedTratos = responses;
 
-          setTratoReciente(fetchedTratos[0]);
-          setTratos(fetchedTratos.slice(1));
-        } catch (error) {
-          console.error("Error al obtener los tratos:", error);
+          const validTratos = responses.filter(Boolean);
+          console.log("Tratos obtenidos:", validTratos);
+
+          if (validTratos.length > 0) {
+            setTratoReciente(validTratos[0]);
+            setTratos(validTratos.slice(1));
+          }
         }
-      };
-      fetchTratos();
-    }
+      } catch (error) {
+        console.error("Error al cargar tratos:", error);
+      }
+    };
+    fetchTratosCompletados();
   }, []);
 
   const openPopup = (trato) => {

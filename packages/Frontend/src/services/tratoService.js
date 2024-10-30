@@ -11,9 +11,9 @@ const tratoService = {
     }
   },
 
-  getTratoById: async (id) => {
+  getTratoById: async (trucoId) => {
     try {
-      const response = await api.get(`/tratos/${id}`); // sin el /api/
+      const response = await api.get(`/tratos/truco/${trucoId}`); // sin el /api/
       return response.data;
     } catch (error) {
       console.error('Error en getTratoById:', error);
