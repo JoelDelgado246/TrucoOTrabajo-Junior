@@ -1,24 +1,30 @@
 import api from './api';
 
-const tratosService = {
+const tratoService = {
   getAllTratos: async () => {
     try {
-      const response = await api.get('/tratos');
+      const response = await api.get('/api/tratos');
+      console.log('Respuesta getAllTratos:', response.data);
       return response.data;
     } catch (error) {
-      console.error('Error en getAllTratos:', error);
+      console.error('Error en getAllTratos:', error.response || error);
       throw error;
     }
   },
 
   getTratoById: async (id) => {
     try {
-      const response = await api.get(`/tratos/${id}`);
+      if (!id) throw new Error('ID es requerido');
+
+      console.log('Intentando obtener trato con ID:', id);
+      const response = await api.get(`/api/tratos/${id}`);
+      console.log('Respuesta getTratoById:', response.data);
       return response.data;
     } catch (error) {
+      console.error('Error en getTratoById:', error);
       throw error;
     }
   }
 };
 
-export default tratosService;
+export default tratoService;

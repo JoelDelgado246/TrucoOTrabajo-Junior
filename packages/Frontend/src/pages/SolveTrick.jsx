@@ -4,6 +4,7 @@ import Header from "../components/layout/Header";
 import TestResults from "../components/trucos/TestResults";
 import MultipleChoice from "../components/trucos/MultipleChoice";
 import { trucosService } from "../services/trucosService";
+import tratoService from "../services/tratoService";
 import ImageQuestion from "../components/trucos/ImageQuestion";
 import "../css/SolveTrick.css";
 
@@ -18,6 +19,8 @@ export default function SolveTrick() {
   const [isLoading, setIsLoading] = useState(false);
   const [showTrato, setShowTrato] = useState(false);
   const [error, setError] = useState(null);
+  const [trato, setTrato] = useState(null);
+
   const popupRef = useRef(null);
   // Añadir al principio del componente
   const [tratoGuardado, setTratoGuardado] = useState(
@@ -29,13 +32,27 @@ export default function SolveTrick() {
     const cargarTruco = async () => {
       try {
         setLoading(true);
-        // Usar el query parameter para obtener un truco específico
+        // Primero cargar el truco
         const response = await trucosService.getAllTrucos({ id });
-        console.log("Truco recibido:", response); // Para debugging
+        console.log("Truco recibido:", response);
         setTruco(response);
+
+        // Luego intentar cargar el trato
+        if (id) {
+          try {
+            const tratoResponse = await tratoService.getTratoById(id);
+            console.log("Trato recibido:", tratoResponse);
+            if (tratoResponse) {
+              setTrato(tratoResponse);
+            }
+          } catch (tratoError) {
+            console.error("Error al cargar el trato:", tratoError);
+            // No establecemos el error general para que al menos se muestre el truco
+          }
+        }
       } catch (err) {
         console.error("Error al cargar el truco:", err);
-        setError(err.message);
+        setError(err.message || "Error al cargar el contenido");
       } finally {
         setLoading(false);
       }
@@ -215,7 +232,7 @@ export default function SolveTrick() {
                 {truco.dificultad || "Dificultad"}
               </div>
               <div className="rain-button bg-customDarkOrange px-6 py-2 shadow-lg rounded font-michroma text-title2">
-                Categoría
+                🥸
               </div>
               <button
                 onClick={showPopup}
@@ -302,14 +319,42 @@ export default function SolveTrick() {
       {isPopupVisible && (
         <div
           ref={popupRef}
-          className="fixed top-1/3 left-1/3 bg-customPurple text-white p-20 rounded shadow-lg z-10 cursor-move"
+          className="fixed top-1/3 left-1/3 bg-customPurple text-white p-8 rounded shadow-lg z-10 cursor-move max-w-md"
           onMouseDown={handleMouseDown}
         >
-          <div className="flex justify-between items-center mb-4">
-            <p>Este es un trato especial para {truco.titulo_truco}</p>
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold">Trato Especial</h3>
+
+            {/* Título y descripción del trato */}
+            {trato && (
+              <>
+                <h4 className="text-lg font-semibold">{trato.titulo}</h4>
+                {trato.contenido && (
+                  <p className="text-sm">{trato.contenido}</p>
+                )}
+                {trato.tutorial && (
+                  <p className="text-sm">
+                    👉 Ganarás acceso a un tutorial especial:{" "}
+                    {trato.descripcionTutorial || "Tutorial sobre el tema"}
+                  </p>
+                )}
+                {trato.curso && (
+                  <p className="text-sm">
+                    👉 Obtendrás acceso a un curso completo:{" "}
+                    {trato.descripcionCurso || "Curso especializado"}
+                  </p>
+                )}
+              </>
+            )}
+
+            {/* Mensaje motivacional */}
+            <p className="text-sm italic">
+              ¡Completa el reto para desbloquear esta recompensa!
+            </p>
+
             <button
               onClick={closePopup}
-              className="text-xl top-2 right-2 absolute"
+              className="absolute top-2 right-2 text-xl hover:text-gray-300"
             >
               ×
             </button>
