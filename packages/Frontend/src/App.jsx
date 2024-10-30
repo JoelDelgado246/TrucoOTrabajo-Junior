@@ -12,13 +12,11 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/comunidad" element={<Comunidad />} />
         <Route path="/trucos" element={<Trucos />} />
         <Route path="/trucos/:id" element={<SolveTrick />} />
         <Route path="/tratos" element={<Tratos />} />
         <Route path="/tratos/:id" element={<Tratos />} />
         <Route path="/solve-trick" element={<SolveTrick />} />
-        <Route path="/prueba" element={<PruebaConexion />} />
       </Routes>
     </Router>
   );

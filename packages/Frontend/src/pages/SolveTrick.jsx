@@ -128,7 +128,10 @@ export default function SolveTrick() {
 
         if (opcionSeleccionada.esCorrecto) {
           // Guardar en localStorage que el truco fue completado
-          localStorage.setItem(`truco_completado_${id}`, "true");
+          localStorage.setItem(
+            `truco_completado_${id}`,
+            JSON.stringify({ id: truco.id, completadoEn: new Date().toISOString() })
+          );
           setShowTrato(true);
         }
       }

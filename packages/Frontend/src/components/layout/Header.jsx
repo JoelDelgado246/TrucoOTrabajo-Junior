@@ -14,7 +14,7 @@ export default function Header() {
     <header className="bg-customOrange relative">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/">
-          <img src={pumpkinLogo} alt="Logo de calabaza" className="w-20 h-20" />
+          <img src={pumpkinLogo} alt="Logo de calabaza" className="w-16 h-16"/>
         </Link>
 
         <button onClick={toggleMenu} className="text-black text-3xl lg:hidden">
