@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function ResourceCard({ trato, onExpand }) {
   return (
-    <div className="bg-customDarkOrange p-4 rounded-lg text-black flex flex-col justify-between items-center h-60 mx-4">
+    <div className="bg-customDarkOrange p-4 rounded-lg text-black flex flex-col justify-between items-center h-60 mx-4 mb-8">
         <h4 className="font-creepster text-title1 text-center">{trato.titulo || 'Recurso'}</h4>
       <div className="flex flex-col items-center justify-center h-full overflow-hidden">
         <p className="overflow-y-auto font-michroma text-title3 text-center max-h-20 px-2">

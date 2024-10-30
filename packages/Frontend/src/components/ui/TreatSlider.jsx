@@ -9,7 +9,7 @@ export default function TratoSlider({ items }) {
     if (isAutoPlaying) {
       interval = setInterval(() => {
         nextSlide();
-      }, 1500);
+      }, 3000);
     }
     return () => clearInterval(interval);
   }, [isAutoPlaying, currentIndex]);
@@ -35,7 +35,7 @@ export default function TratoSlider({ items }) {
         className="flex gap-8 transition-transform duration-500 ease-in-out"
         style={{
           transform: `translateX(-${currentIndex * (250 + 32)}px)`,
-          width: `${items.length * 100}%`,
+          width: `${items.length * (250 + 32)}px`,
         }}
       >
         {items.map((item, index) => (
