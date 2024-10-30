@@ -14,7 +14,7 @@ export default function Header() {
     <header className="bg-customOrange relative">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/">
-          <img src={pumpkinLogo} alt="Logo de calabaza" className="w-20 h-20"/>
+          <img src={pumpkinLogo} alt="Logo de calabaza" className="w-20 h-20" />
         </Link>
 
         <button onClick={toggleMenu} className="text-black text-3xl lg:hidden">
@@ -26,7 +26,10 @@ export default function Header() {
             menuOpen ? "translate-x-0" : "-translate-x-full"
           } transition-transform duration-300 ease-in-out z-40`}
         >
-          <button onClick={toggleMenu} className="text-white text-3xl absolute top-4 right-4">
+          <button
+            onClick={toggleMenu}
+            className="text-white text-3xl absolute top-4 right-4"
+          >
             <FaTimes />
           </button>
 
@@ -68,12 +71,6 @@ export default function Header() {
           >
             TRATOS
           </Link>
-          <Link
-            to="/solve-trick"
-            className="font-creepster text-[21px] text-black hover:text-customPurple transition-colors duration-200"
-          >
-            Truco Resuelto
-          </Link>
         </nav>
 
         <div className="hidden lg:flex items-center">
@@ -83,9 +80,7 @@ export default function Header() {
         </div>
 
         {menuOpen && (
-          <div className="flex lg:hidden items-center justify-center mt-4">
-
-          </div>
+          <div className="flex lg:hidden items-center justify-center mt-4"></div>
         )}
       </div>
     </header>
