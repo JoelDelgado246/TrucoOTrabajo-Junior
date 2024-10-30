@@ -13,10 +13,12 @@ const tratoService = {
 
   getTratoById: async (trucoId) => {
     try {
-      const response = await api.get(`/tratos/truco/${trucoId}`); // sin el /api/
+      console.log('Consultando trato para trucoId:', trucoId);
+      const response = await api.get(`/tratos/truco/${trucoId}`);
+      console.log('Respuesta del servidor:', response.data);
       return response.data;
     } catch (error) {
-      console.error('Error en getTratoById:', error);
+      console.error('Error detallado:', error.response || error);
       throw error;
     }
   }

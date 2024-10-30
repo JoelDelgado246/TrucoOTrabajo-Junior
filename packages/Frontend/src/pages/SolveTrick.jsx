@@ -126,10 +126,13 @@ export default function SolveTrick() {
             : "Respuesta incorrecta. ¡Inténtalo de nuevo!",
         });
 
-        if (opcionSeleccionada?.esCorrecto) {
-          saveCompletedTrick(id);
+        if (opcionSeleccionada.esCorrecto) {
+          saveCompletedTrick(truco.id);
           setShowTrato(true);
         }
+
+        // Disparar evento para actualizar la lista de tratos
+        window.dispatchEvent(new Event("storage"));
       }
     } catch (error) {
       console.error("Error:", error);
@@ -192,15 +195,23 @@ export default function SolveTrick() {
   };
 
   const saveCompletedTrick = (trucoId) => {
+    const trucoCompletado = {
+      trucoId: parseInt(trucoId),
+      tratoId: parseInt(trucoId), // Los IDs coinciden en tu BD
+      completadoEn: new Date().toISOString(),
+    };
+    console.log("Guardando truco completado:", trucoCompletado);
     localStorage.setItem(
       `truco_completado_${trucoId}`,
-      JSON.stringify({
-        trucoId: trucoId,
-        tratoId: truco.truco_id, // Usa el ID correcto de la relación
-        completadoEn: new Date().toISOString(),
-      })
+      JSON.stringify(trucoCompletado)
     );
   };
+  console.log(
+    "LocalStorage:",
+    Object.entries(localStorage).filter(([key]) =>
+      key.startsWith("truco_completado_")
+    )
+  );
 
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error: {error}</div>;

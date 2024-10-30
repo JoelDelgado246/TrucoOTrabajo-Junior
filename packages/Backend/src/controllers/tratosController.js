@@ -50,28 +50,45 @@ export const getTratos = async (req, res) => {
 export const getTratoById = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log('Backend: Buscando trato para trucoId:', trucoId);
 
-    const [rows] = await pool.query('SELECT * FROM Trato WHERE trato_id = ?', [id]);
+    // console.log('Buscando trato con ID:', id);
 
-    if (rows.length === 0) {
-      return res.status(404).json({
-        message: `No se encontró el trato con ID "${id}"`
-      });
+    // const [rows] = await pool.query('SELECT * FROM Trato WHERE trato_id = ?', [id]);
+
+    // console.log('Resultado de la consulta:', rows);
+
+    // if (rows.length === 0) {
+    //   return res.status(404).json({
+    //     message: `No se encontró el trato con ID "${id}"`
+    //   });
+    // }
+
+    // // Usar el mismo formato de respuesta que en getTratos
+    // const trato = {
+    //   id: rows[0].trato_id,
+    //   titulo: rows[0].titulo_trato,
+    //   imagen: rows[0].url_imagen,
+    //   contenido: rows[0].texto_contenido,
+    //   tutorial: rows[0].enlace_tutorial,
+    //   curso: rows[0].enlace_curso,
+    //   descripcionTutorial: rows[0].descripcion_tutorial,
+    //   descripcionCurso: rows[0].descripcion_curso,
+    // };
+
+    // res.json(trato);
+
+    const [trato] = await pool.query(
+      'SELECT * FROM Trato WHERE truco_id = ?',
+      [trucoId]
+    );
+    console.log('Backend: Resultado de consulta:', trato);
+
+    if (trato.length === 0) {
+      return res.status(404).json({ message: 'Trato no encontrado' });
     }
 
-    // Usar el mismo formato de respuesta que en getTratos
-    const trato = {
-      id: rows[0].trato_id,
-      titulo: rows[0].titulo_trato,
-      imagen: rows[0].url_imagen,
-      contenido: rows[0].texto_contenido,
-      tutorial: rows[0].enlace_tutorial,
-      curso: rows[0].enlace_curso,
-      descripcionTutorial: rows[0].descripcion_tutorial,
-      descripcionCurso: rows[0].descripcion_curso,
-    };
-
-    res.json(trato);
+    res.json(trato[0]);
   } catch (error) {
     console.error('Error al obtener trato:', error);
     res.status(500).json({

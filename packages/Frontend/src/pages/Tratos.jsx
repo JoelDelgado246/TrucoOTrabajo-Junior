@@ -15,9 +15,10 @@ export default function Truco() {
       try {
         const trucosCompletados = Object.entries(localStorage)
           .filter(([key]) => key.startsWith("truco_completado_"))
-          .map(([key, value]) => {
+          .map(([_, value]) => {
             try {
-              return JSON.parse(value);
+              const parsed = JSON.parse(value);
+              return parsed && parsed.trucoId ? parsed : null;
             } catch {
               return null;
             }
@@ -25,26 +26,36 @@ export default function Truco() {
           .filter(Boolean)
           .sort((a, b) => new Date(b.completadoEn) - new Date(a.completadoEn));
 
+        console.log("Trucos completados filtrados:", trucosCompletados);
+
         if (trucosCompletados.length > 0) {
           const responses = await Promise.all(
             trucosCompletados.map((truco) =>
-              tratoService.getTratoById(truco.trucoId || truco.tratado_id)
+              tratoService.getTratoById(truco.trucoId)
             )
           );
 
           const validTratos = responses.filter(Boolean);
-          console.log("Tratos obtenidos:", validTratos);
+          console.log("Tratos válidos:", validTratos);
 
           if (validTratos.length > 0) {
+            // Establecer el trato más reciente
             setTratoReciente(validTratos[0]);
-            setTratos(validTratos.slice(1));
+            // Guardar el resto de tratos
+            setTratos(validTratos);
           }
         }
       } catch (error) {
-        console.error("Error al cargar tratos:", error);
+        console.error("Error detallado:", error);
       }
     };
+    // Ejecutar la función cuando se monta el componente y cuando cambia el localStorage
     fetchTratosCompletados();
+    window.addEventListener("storage", fetchTratosCompletados);
+
+    return () => {
+      window.removeEventListener("storage", fetchTratosCompletados);
+    };
   }, []);
 
   const openPopup = (trato) => {
@@ -58,21 +69,45 @@ export default function Truco() {
   return (
     <div className="bg-customPurple min-h-screen text-white">
       <Header />
-      <h2 className="text-title1 font-creepster ml-16 my-4 ">Reciente</h2>
-      <RecentTrickSection trato={tratoReciente} onExpand={openPopup} />
-      <h2 className="text-title1 font-creepster ml-16 my-4">Tus Tratos</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {tratos.map((trato, index) => (
-          <ResourceCard
-            key={index}
-            trato={trato}
-            onExpand={() => openPopup(trato)}
+      <div className="container mx-auto px-4 py-8">
+        <h2 className="text-title1 font-creepster mb-8">Reciente</h2>
+        {tratoReciente ? (
+          <RecentTrickSection
+            trato={{
+              titulo: tratoReciente.titulo_trato,
+              contenido: tratoReciente.texto_contenido,
+              tutorial: tratoReciente.enlace_tutorial,
+              curso: tratoReciente.enlace_curso,
+            }}
+            onExpand={() => setSelectedTrato(tratoReciente)}
           />
-        ))}
+        ) : (
+          <p>No hay tratos recientes</p>
+        )}
+
+        <h2 className="text-title1 font-creepster my-8">Tus Tratos</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {tratos.map((trato, index) => (
+            <ResourceCard
+              key={index}
+              trato={{
+                titulo: trato.titulo_trato,
+                contenido: trato.texto_contenido,
+                tutorial: trato.enlace_tutorial,
+                curso: trato.enlace_curso,
+              }}
+              onExpand={() => setSelectedTrato(trato)}
+            />
+          ))}
+        </div>
+
+        {selectedTrato && (
+          <TratoPopup
+            trato={selectedTrato}
+            onClose={() => setSelectedTrato(null)}
+          />
+        )}
       </div>
-      {selectedTrato && (
-        <TratoPopup trato={selectedTrato} onClose={closePopup} />
-      )}
     </div>
   );
 }
