@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import Header from "../components/layout/Header";
 import Slider from "../components/ui/Slider";
-import TratoSlider from "../components/ui/TreatSlider"
+import TratoSlider from "../components/ui/TreatSlider";
 import SectionCard from "../components/ui/SectionCard";
 import Footer from "../components/layout/Footer";
 import trucosService from "../services/trucosService";
-import tratosService from "../services/tratoService";
+import tratosService from "/src/services/tratoService.js";
 
 function getRandomItems(arr, num) {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
@@ -13,7 +13,6 @@ function getRandomItems(arr, num) {
 }
 
 export default function Home() {
-
   const [sliderItems, setSliderItems] = useState([]);
   const [tratoItems, setTratoItems] = useState([]);
   const [error, setError] = useState(null);
@@ -23,22 +22,22 @@ export default function Home() {
       try {
         const data = await trucosService.getAllTrucos();
         const randomItems = getRandomItems(data, 9);
-        setSliderItems(randomItems); 
+        setSliderItems(randomItems);
       } catch (error) {
         console.error("Error fetching trucos:", error);
         setError("Error al cargar los trucos");
       }
     };
     const fetchTratos = async () => {
-      try{
+      try {
         const data = await tratosService.getAllTratos();
         const randomItems = getRandomItems(data, 9);
         setTratoItems(randomItems);
-      }catch (error){
+      } catch (error) {
         console.error("Error fetching tratos: ", error);
         setError("Error al cargar los tratos");
       }
-    }
+    };
 
     fetchTrucos();
     fetchTratos();
@@ -80,7 +79,7 @@ export default function Home() {
             buttonLink="/tratos"
           />
         </section>
-        <Footer/>
+        <Footer />
       </main>
     </div>
   );
