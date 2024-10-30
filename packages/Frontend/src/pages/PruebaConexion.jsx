@@ -1,12 +1,15 @@
-// src/pages/PruebaConexion.jsx
-import { useEffect, useState } from "react";
-import { trucosService } from "../services/trucosService";
+import { useState, useEffect } from "react";
+import pumpkinEasy from "../imgs/pumpkinEasy.png";
+import pumpkinMedium from "../imgs/pumpkinMedium.png";
+import pumpkinHard from "../imgs/pumpkinHard.png";
 
 export default function PruebaConexion() {
   const [trucos, setTrucos] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [trucoSeleccionado, setTrucoSeleccionado] = useState(null);
+  const [rotationIndex, setRotationIndex] = useState(0);
+  const pumpkinImages = [pumpkinEasy, pumpkinMedium, pumpkinHard];
 
   useEffect(() => {
     const cargarTrucos = async () => {
@@ -23,8 +26,40 @@ export default function PruebaConexion() {
     cargarTrucos();
   }, []);
 
-  if (loading) return <div>Cargando...</div>;
-  if (error) return <div>Error: {error}</div>;
+  useEffect(() => {
+    let rotationInterval;
+    if (loading) {
+      rotationInterval = setInterval(() => {
+        setRotationIndex((prevIndex) => (prevIndex + 1) % pumpkinImages.length);
+      }, 1000);
+    }
+    return () => clearInterval(rotationInterval);
+  }, [loading]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <img
+          src={pumpkinImages[rotationIndex]}
+          alt="Loading..."
+          className="w-24 h-24 animate-spin"
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen">
+        <img
+          src={pumpkinHard}
+          alt="Error"
+          className="w-24 h-24"
+        />
+        <p className="mt-4 text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
 
   const cargarTruco = async (id) => {
     try {

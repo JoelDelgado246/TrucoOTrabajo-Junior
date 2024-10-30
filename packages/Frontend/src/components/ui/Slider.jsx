@@ -17,17 +17,17 @@ export default function Slider({ items }) {
     let interval;
     if (isAutoPlaying) {
       interval = setInterval(() => {
-        nextSlide();
+        nextSlide2();
       }, 1500);
     }
     return () => clearInterval(interval);
   }, [isAutoPlaying, currentIndex]);
 
-  const nextSlide = () => {
+  const nextSlide2 = () => {
     setCurrentIndex((prev) => (prev + 1) % items.length);
   };
 
-  const prevSlide = () => {
+  const prevSlide2 = () => {
     setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
   };
 
@@ -48,7 +48,7 @@ export default function Slider({ items }) {
             key={index}
             className="min-w-[250px] h-[250px] bg-customOrange rounded-lg transition-transform duration-500 transform hover:scale-105"
             style={{
-              transform: `translateX(-${currentIndex * (250 + 32)}px)`, // 32px es el gap (gap-8)
+              transform: `translateX(-${currentIndex * (250 + 32)}px)`, 
             }}
           >
             <div className="p-4 flex flex-col justify-between h-full">
@@ -65,7 +65,7 @@ export default function Slider({ items }) {
       </div>
 
       <button
-        onClick={prevSlide}
+        onClick={prevSlide2}
         className="absolute left-2 top-1/2 -translate-y-1/2 bg-customGreen rounded-lg w-10 h-10 flex items-center justify-center hover:bg-lime-300 transition-colors"
       >
         <svg
@@ -84,7 +84,7 @@ export default function Slider({ items }) {
         </svg>
       </button>
       <button
-        onClick={nextSlide}
+        onClick={nextSlide2}
         className="absolute right-2 top-1/2 -translate-y-1/2 bg-customGreen rounded-lg w-10 h-10 flex items-center justify-center hover:bg-lime-300 transition-colors"
       >
         <svg

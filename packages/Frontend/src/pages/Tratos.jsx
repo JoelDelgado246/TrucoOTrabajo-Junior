@@ -3,6 +3,7 @@ import RecentTrickSection from "../components/ui/RecentTrickSection";
 import ResourceCard from "../components/ui/ResourceCard";
 import Header from "../components/layout/Header";
 import tratoService from "../services/tratoService";
+import TratoPopup from "../components/ui/TratoPopup";
 
 export default function Truco() {
   const [tratos, setTratos] = useState([]);
@@ -14,14 +15,14 @@ export default function Truco() {
     const trucosCompletados = Object.keys(localStorage)
       .filter(key => key.startsWith('truco_completado_'))
       .map(key => JSON.parse(localStorage.getItem(key)))
-      .filter(truco => truco && truco.tratoId);
+      .filter(truco => truco && truco.id);
 
     if (trucosCompletados.length > 0) {
       const fetchTratos = async () => {
         try {
           const responses = await Promise.all(
             trucosCompletados.map((truco) =>
-              tratoService.getTratoById(truco.tratoId)
+              tratoService.getTratoById(truco.id)
             )
           );
           const fetchedTratos = responses;
