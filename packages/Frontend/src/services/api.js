@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const BASE_URL = import.meta.env.PROD
-    ? 'https://url-del-backend-desplegado.com'  // URL de producción
+    ? 'trucootrabajo-junior-production-9d0c.up.railway.app'  // URL de producción
     : 'http://localhost:3001';                  // URL de desarrollo
 
 const api = axios.create({
